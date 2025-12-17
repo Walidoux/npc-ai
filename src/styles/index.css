@@ -8,6 +8,32 @@
   }
 }
 
+.sidebar-scroll {
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
+  transition: scrollbar-color 0.3s ease;
+}
+
+.sidebar-scroll:hover {
+  scrollbar-color: var(--color-primary) transparent;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
 @layer utilities {
   .arrow-down::after {
     position: absolute;
