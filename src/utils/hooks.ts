@@ -95,15 +95,22 @@ export const useTyping = (text: string, onComplete?: () => void) => {
   useEffect(() => {
     if (isTyping && currentIndex < text.length) {
       const char = text[currentIndex]
-      const delay = TYPING_DELAYS[char] || TYPING_SPEED
-      if (delay > TYPING_SPEED) {
-        setIsDelayed(true)
-      }
+      const extraDelay = TYPING_DELAYS[char] || 0
+      const isPunctuation = extraDelay > 0
+
+      // Always type the character with base speed
       timeoutRef.current = window.setTimeout(() => {
         setDisplayedText((prev) => prev + char)
         setCurrentIndex((prev) => prev + 1)
-        setIsDelayed(false)
-      }, delay)
+        setIsDelayed(isPunctuation)
+
+        // If it's punctuation, add extra delay before next character
+        if (isPunctuation) {
+          timeoutRef.current = window.setTimeout(() => {
+            setIsDelayed(false)
+          }, extraDelay)
+        }
+      }, TYPING_SPEED)
     } else if (isTyping && currentIndex >= text.length) {
       setIsTyping(false)
       setIsDelayed(false)

@@ -135,7 +135,6 @@ export const Dialogue = () => {
   }
 
   const currentHistory = conversationHistory[selectedNpc] || []
-  const lastMessage = currentHistory.at(-1)
 
   if (!started) {
     return (
@@ -158,9 +157,6 @@ export const Dialogue = () => {
         aria-label='character-dialogue'
         className='relative mb-4 flex items-end gap-4'>
         <CharacterPortrait />
-        {lastMessage?.role === 'assistant' && !isTypingResponse ? (
-          <TalkingBox enabled={enableTypingSound} text={lastMessage.content} />
-        ) : null}
         {isTypingResponse ? (
           <TalkingBox enabled={enableTypingSound} text={currentResponse} />
         ) : null}
