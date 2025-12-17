@@ -5,7 +5,7 @@ import { useSFX } from '@/utils/hooks'
 import { cn } from '@/utils/index'
 
 const Switch = ({ className, onCheckedChange, ...props }: SwitchProps) => {
-  const { audioRef, play } = useSFX('/sfx/switch.mp3')
+  const { audioRef, play } = useSFX()
 
   const handleCheckedChange = (checked: boolean) => {
     play()

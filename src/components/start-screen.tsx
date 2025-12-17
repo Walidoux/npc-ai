@@ -1,7 +1,7 @@
-import { Button, Spinner } from './ui'
 import { SettingsSheet } from './settings-sheet'
+import { Button, Spinner } from './ui'
 
-interface StartScreenProps {
+type StartScreenProps = {
   authChecked: boolean
   isAuthenticating: boolean
   authStatus: boolean
@@ -63,9 +63,9 @@ export const StartScreen = ({
           </Button>
         </div>
         <SettingsSheet
-          selectedNpc={selectedNpc}
-          onNpcChange={onNpcChange}
           enableTypingSound={enableTypingSound}
+          onNpcChange={onNpcChange}
+          selectedNpc={selectedNpc}
           setEnableTypingSound={setEnableTypingSound}
         />
       </div>

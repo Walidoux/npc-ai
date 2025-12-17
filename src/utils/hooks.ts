@@ -161,7 +161,7 @@ const playSound = (type: string, event: 'keydown' | 'keyup') => {
   })
 }
 
-export const useSFX = (soundPath: string) => {
+export const useSFX = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const play = () => {

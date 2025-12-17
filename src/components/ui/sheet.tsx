@@ -13,7 +13,7 @@ import { cn } from '@/utils'
 import { useSFX } from '@/utils/hooks'
 
 function Sheet({ onOpenChange, ...props }: React.ComponentProps<typeof Root>) {
-  const { audioRef, play } = useSFX('/sfx/wosh.mp3')
+  const { audioRef, play } = useSFX()
 
   const handleOpenChange = (open: boolean) => {
     if (open) {
