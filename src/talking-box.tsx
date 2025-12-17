@@ -162,6 +162,7 @@ export const Dialogue = () => {
       {/* Input */}
       <div className='flex gap-2'>
         <Input
+          autoFocus
           disabled={isTypingResponse}
           onChange={(e) => setUserMessage(e.target.value)}
           onKeyDown={handleKeyPress}

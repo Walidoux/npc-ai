@@ -48,11 +48,18 @@ export const StartScreen = ({
 
   // biome-ignore lint/correctness/useHookAtTopLevel: attended
   useEffect(() => {
-    toast('We do not use cookies', {
-      description: 'AI feature is completely free of use',
-      classNames: { content: 'mr-8' },
-      cancel: { label: 'OK !', onClick: () => {} },
-    })
+    if (localStorage.getItem('toastShown') !== 'true') {
+      toast('We do not use cookies', {
+        description: 'AI feature is completely free of use',
+        classNames: { content: 'mr-8' },
+        cancel: {
+          label: 'OK !',
+          onClick() {
+            localStorage.setItem('toastShown', 'true')
+          },
+        },
+      })
+    }
   }, [])
 
   return (
@@ -69,12 +76,15 @@ export const StartScreen = ({
           {buttonContent}
         </Button>
       </div>
-      <SettingsSheet
-        enableTypingSound={enableTypingSound}
-        onNpcChange={onNpcChange}
-        selectedNpc={selectedNpc}
-        setEnableTypingSound={setEnableTypingSound}
-      />
+
+      <div className='fixed top-4 right-4 flex gap-2'>
+        <SettingsSheet
+          enableTypingSound={enableTypingSound}
+          onNpcChange={onNpcChange}
+          selectedNpc={selectedNpc}
+          setEnableTypingSound={setEnableTypingSound}
+        />
+      </div>
     </div>
   )
 }
