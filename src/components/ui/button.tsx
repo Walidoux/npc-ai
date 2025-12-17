@@ -15,37 +15,49 @@ export const buttonVariants = tv({
       outline:
         'border-2 bg-transparent shadow-md transition hover:translate-y-1 hover:shadow active:translate-x-1 active:translate-y-2 active:shadow-none',
       link: 'bg-transparent hover:underline',
-      ghost: 'bg-transparent hover:bg-accent'
+      ghost: 'bg-transparent hover:bg-accent',
     },
     size: {
       sm: 'px-3 py-1 text-sm shadow hover:shadow-none',
       md: 'px-4 py-1.5 text-base',
       lg: 'px-6 py-2 text-md lg:px-8 lg:py-3 lg:text-lg',
-      icon: 'p-2'
-    }
+      icon: 'p-2',
+    },
   },
   defaultVariants: {
     size: 'md',
-    variant: 'default'
-  }
+    variant: 'default',
+  },
 })
 
-export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+export interface IButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 
 export const Button = forwardRef<HTMLButtonElement, IButtonProps>(
   (
-    { children, size = 'md', className = '', variant = 'default', asChild = false, ...props }: IButtonProps,
-    forwardedRef
+    {
+      children,
+      size = 'md',
+      className = '',
+      variant = 'default',
+      asChild = false,
+      ...props
+    }: IButtonProps,
+    forwardedRef,
   ) => {
     const Comp = asChild ? Slot : 'button'
     return (
-      <Comp className={cn(buttonVariants({ variant, size }), className)} ref={forwardedRef} {...props}>
+      <Comp
+        className={cn(buttonVariants({ variant, size }), className)}
+        ref={forwardedRef}
+        {...props}>
         {children}
       </Comp>
     )
-  }
+  },
 )
 
 Button.displayName = 'Button'

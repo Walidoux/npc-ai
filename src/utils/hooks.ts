@@ -1,3 +1,7 @@
+import { useRef } from 'react'
+import { authenticate, isAuthenticated } from '../services/ai'
+import { useSettings } from '../store/settings'
+
 const TYPING_SPEED = 50
 
 export const useAudioSamples = () => {
@@ -155,4 +159,80 @@ const playSound = (type: string, event: 'keydown' | 'keyup') => {
   audio.play().catch(() => {
     // Ignore audio play errors
   })
+}
+
+export const useSFX = (soundPath: string) => {
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  const play = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(() => {
+        // Ignore audio play errors
+      })
+    }
+  }
+
+  return { audioRef, play }
+}
+
+export const useAuth = () => {
+  const [authChecked, setAuthChecked] = useState(false)
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
+  const { isAuthenticated: authStatus, setIsAuthenticated } = useSettings()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        setIsAuthenticated(await isAuthenticated())
+      } catch (error) {
+        console.error('Auth check failed:', error)
+      } finally {
+        setAuthChecked(true)
+      }
+    }
+    checkAuth()
+  }, [setIsAuthenticated])
+
+  const handleStart = async (setStarted: (value: boolean) => void) => {
+    if (authStatus) {
+      setStarted(true)
+    } else {
+      setIsAuthenticating(true)
+      try {
+        await authenticate()
+        const authenticated = await isAuthenticated()
+        setIsAuthenticated(authenticated)
+        if (authenticated) {
+          setStarted(true)
+        }
+      } catch (error) {
+        console.error('Authentication failed:', error)
+      } finally {
+        setIsAuthenticating(false)
+      }
+    }
+  }
+
+  return { authChecked, isAuthenticating, authStatus, handleStart }
+}
+
+export const useBackgroundAudio = (started: boolean) => {
+  const bgAudioRef = useRef<HTMLAudioElement>(null)
+
+  useEffect(() => {
+    const play = async () => {
+      if (started && bgAudioRef.current) {
+        bgAudioRef.current.loop = true
+        try {
+          await bgAudioRef.current.play()
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
+    play()
+  }, [started])
+
+  return bgAudioRef
 }

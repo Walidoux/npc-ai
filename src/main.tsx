@@ -10,5 +10,5 @@ createRoot(document.getElementById('root') as HTMLElement).render(
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
       <Dialogue />
     </ThemeProvider>
-  </StrictMode>
+  </StrictMode>,
 )

@@ -2,7 +2,15 @@
 
 import type { DialogTitleProps } from '@radix-ui/react-dialog'
 import { Close as CloseIcon } from '@nsmr/pixelart-react'
-import { Content, Description, Overlay, Portal, Root, Title, Trigger } from '@radix-ui/react-dialog'
+import {
+  Content,
+  Description,
+  Overlay,
+  Portal,
+  Root,
+  Title,
+  Trigger,
+} from '@radix-ui/react-dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { tv, type VariantProps } from 'tailwind-variants'
 import { cn } from '@/utils'
@@ -21,21 +29,29 @@ const overlayVariants = tv({
   variants: {
     variant: {
       default: 'inset-0 z-50 bg-black/85',
-      none: 'fixed bg-transparent'
-    }
+      none: 'fixed bg-transparent',
+    },
   },
   defaultVariants: {
-    variant: 'default'
-  }
+    variant: 'default',
+  },
 })
 
-interface IDialogBackgroupProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof overlayVariants> {}
+interface IDialogBackgroupProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof overlayVariants> {}
 
 const DialogBackdrop = forwardRef<HTMLDivElement, IDialogBackgroupProps>(
   (inputProps: IDialogBackgroupProps, forwardedRef) => {
     const { variant = 'default', className, ...props } = inputProps
-    return <Overlay className={cn(overlayVariants({ variant }), className)} ref={forwardedRef} {...props} />
-  }
+    return (
+      <Overlay
+        className={cn(overlayVariants({ variant }), className)}
+        ref={forwardedRef}
+        {...props}
+      />
+    )
+  },
 )
 
 DialogBackdrop.displayName = 'DialogBackdrop'
@@ -59,15 +75,17 @@ const dialogVariants = tv({
       '2xl': 'lg:max-w-[70%]',
       '3xl': 'lg:max-w-[80%]',
       '4xl': 'lg:max-w-[90%]',
-      screen: 'max-w-full'
-    }
+      screen: 'max-w-full',
+    },
   },
   defaultVariants: {
-    size: 'auto'
-  }
+    size: 'auto',
+  },
 })
 
-interface IDialogContentProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof dialogVariants> {
+interface IDialogContentProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof dialogVariants> {
   overlay?: IDialogBackgroupProps
 }
 
@@ -78,7 +96,10 @@ const DialogContent = forwardRef<HTMLDivElement, IDialogContentProps>(
     return (
       <Portal>
         <DialogBackdrop {...overlay} />
-        <Content className={cn(dialogVariants({ size }), className)} ref={forwardedRef} {...props}>
+        <Content
+          className={cn(dialogVariants({ size }), className)}
+          ref={forwardedRef}
+          {...props}>
           <VisuallyHidden>
             <Title />
           </VisuallyHidden>
@@ -86,12 +107,17 @@ const DialogContent = forwardRef<HTMLDivElement, IDialogContentProps>(
         </Content>
       </Portal>
     )
-  }
+  },
 )
 DialogContent.displayName = 'DialogContent'
 
-interface IDialogDescriptionProps extends React.HTMLAttributes<HTMLDivElement> {}
-const DialogDescription = ({ children, className, ...props }: IDialogDescriptionProps) => (
+interface IDialogDescriptionProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+const DialogDescription = ({
+  children,
+  className,
+  ...props
+}: IDialogDescriptionProps) => (
   <Description className={cn(className)} {...props}>
     {children}
   </Description>
@@ -101,24 +127,32 @@ const dialogFooterVariants = tv({
   base: 'flex min-h-12 items-center justify-end gap-4 border-t-2 px-4 py-2',
   variants: {
     variant: {
-      default: 'bg-background text-foreground'
+      default: 'bg-background text-foreground',
     },
     position: {
       fixed: 'sticky bottom-0',
-      static: 'static'
-    }
+      static: 'static',
+    },
   },
   defaultVariants: {
-    position: 'fixed'
-  }
+    position: 'fixed',
+  },
 })
 
 export interface IDialogFooterProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof dialogFooterVariants> {}
 
-const DialogFooter = ({ children, className, position, variant, ...props }: IDialogFooterProps) => (
-  <div className={cn(dialogFooterVariants({ position, variant }), className)} {...props}>
+const DialogFooter = ({
+  children,
+  className,
+  position,
+  variant,
+  ...props
+}: IDialogFooterProps) => (
+  <div
+    className={cn(dialogFooterVariants({ position, variant }), className)}
+    {...props}>
     {children}
   </div>
 )
@@ -127,17 +161,17 @@ const dialogHeaderVariants = tv({
   base: 'flex min-h-12 items-center justify-between border-b-2 px-4',
   variants: {
     variant: {
-      default: 'bg-primary text-primary-foreground'
+      default: 'bg-primary text-primary-foreground',
     },
     position: {
       fixed: 'sticky top-0',
-      static: 'static'
-    }
+      static: 'static',
+    },
   },
   defaultVariants: {
     variant: 'default',
-    position: 'static'
-  }
+    position: 'static',
+  },
 })
 
 const DialogHeaderDefaultLayout = ({ children }: React.PropsWithChildren) => (
@@ -156,9 +190,22 @@ interface IDialogHeaderProps
   asChild?: boolean
 }
 
-const DialogHeader = ({ children, className, position, variant, asChild, ...props }: IDialogHeaderProps) => (
-  <div className={cn(dialogHeaderVariants({ position, variant }), className)} {...props}>
-    {asChild ? children : <DialogHeaderDefaultLayout>{children}</DialogHeaderDefaultLayout>}
+const DialogHeader = ({
+  children,
+  className,
+  position,
+  variant,
+  asChild,
+  ...props
+}: IDialogHeaderProps) => (
+  <div
+    className={cn(dialogHeaderVariants({ position, variant }), className)}
+    {...props}>
+    {asChild ? (
+      children
+    ) : (
+      <DialogHeaderDefaultLayout>{children}</DialogHeaderDefaultLayout>
+    )}
   </div>
 )
 
@@ -167,7 +214,7 @@ const DialogComponent = Object.assign(Dialog, {
   Header: DialogHeader,
   Content: DialogContent,
   Description: DialogDescription,
-  Footer: DialogFooter
+  Footer: DialogFooter,
 })
 
 export { DialogComponent as Dialog }

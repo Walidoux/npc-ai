@@ -3,17 +3,22 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = 'text', placeholder = 'Enter text', className = '', ...props }, ref) => (
+  (
+    { type = 'text', placeholder = 'Enter text', className = '', ...props },
+    ref,
+  ) => (
     <input
       className={`w-full rounded border-2 px-4 py-2 shadow-md transition focus:shadow-xs focus:outline-hidden ${
-        props['aria-invalid'] ? 'border-destructive text-destructive shadow-destructive shadow-xs' : ''
+        props['aria-invalid']
+          ? 'border-destructive text-destructive shadow-destructive shadow-xs'
+          : ''
       } ${className}`}
       placeholder={placeholder}
       ref={ref}
       type={type}
       {...props}
     />
-  )
+  ),
 )
 
 Input.displayName = 'Input'
