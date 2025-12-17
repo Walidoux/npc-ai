@@ -1,6 +1,6 @@
 @theme {
-  --font-head: 'Archivo Black', sans-serif;
-  --font-sans: 'Space Grotesk', sans-serif;
+  --font-head: 'VT323', sans-serif;
+  --font-sans: 'VT323', sans-serif;
   --radius: var(--radius);
 
   --shadow-xs: 1px 1px 0 0 var(--border);
