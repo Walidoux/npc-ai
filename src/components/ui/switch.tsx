@@ -9,9 +9,7 @@ const Switch = ({ className, onCheckedChange, ...props }: SwitchProps) => {
 
   const handleCheckedChange = (checked: boolean) => {
     play()
-    if (onCheckedChange) {
-      onCheckedChange(checked)
-    }
+    onCheckedChange?.(checked)
   }
 
   return (
@@ -29,7 +27,10 @@ const Switch = ({ className, onCheckedChange, ...props }: SwitchProps) => {
           )}
         />
       </Root>
-      <audio preload='auto' ref={audioRef} src='/sfx/switch.mp3'>
+      <audio
+        preload='auto'
+        ref={audioRef}
+        src={`${import.meta.env.BASE_URL}sfx/switch.mp3`}>
         <track kind='captions' />
       </audio>
     </>

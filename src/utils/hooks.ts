@@ -184,7 +184,8 @@ export const useAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        setIsAuthenticated(await isAuthenticated())
+        const authenticated = await isAuthenticated()
+        setIsAuthenticated(authenticated)
       } catch (error) {
         console.error('Auth check failed:', error)
       } finally {
@@ -222,6 +223,7 @@ export const useBackgroundAudio = (started: boolean) => {
 
   useEffect(() => {
     const play = async () => {
+      console.log(Boolean(started && bgAudioRef.current))
       if (started && bgAudioRef.current) {
         bgAudioRef.current.loop = true
         try {

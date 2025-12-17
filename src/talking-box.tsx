@@ -130,14 +130,13 @@ export const Dialogue = () => {
     return (
       <StartScreen
         authChecked={authChecked}
-        isAuthenticating={isAuthenticating}
         authStatus={authStatus}
+        enableTypingSound={enableTypingSound}
+        isAuthenticating={isAuthenticating}
+        onNpcChange={handleNpcChange}
         onStart={() => handleStart(setStarted)}
         selectedNpc={selectedNpc}
-        onNpcChange={handleNpcChange}
-        enableTypingSound={enableTypingSound}
         setEnableTypingSound={setEnableTypingSound}
-        bgAudioRef={bgAudioRef}
       />
     )
   }
@@ -178,14 +177,20 @@ export const Dialogue = () => {
           selectedNpc={selectedNpc}
         />
         <SettingsSheet
-          selectedNpc={selectedNpc}
-          onNpcChange={handleNpcChange}
           enableTypingSound={enableTypingSound}
+          onClearConversation={() => clearConversation(selectedNpc)}
+          onNpcChange={handleNpcChange}
+          selectedNpc={selectedNpc}
           setEnableTypingSound={setEnableTypingSound}
           showClearConversation={true}
-          onClearConversation={() => clearConversation(selectedNpc)}
         />
       </div>
+      <audio
+        preload='auto'
+        ref={bgAudioRef}
+        src={`${import.meta.env.BASE_URL}background.mp3`}>
+        <track kind='captions' />
+      </audio>
     </main>
   )
 }

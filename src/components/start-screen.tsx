@@ -10,7 +10,6 @@ type StartScreenProps = {
   onNpcChange: (name: string) => void
   enableTypingSound: boolean
   setEnableTypingSound: (value: boolean) => void
-  bgAudioRef: React.RefObject<HTMLAudioElement | null>
 }
 
 export const StartScreen = ({
@@ -22,7 +21,6 @@ export const StartScreen = ({
   onNpcChange,
   enableTypingSound,
   setEnableTypingSound,
-  bgAudioRef,
 }: StartScreenProps) => {
   if (!authChecked) {
     return (
@@ -47,36 +45,26 @@ export const StartScreen = ({
     buttonContent = 'Sign In & Start'
   }
 
-  console.log(import.meta.env.BASE_URL)
-
   return (
-    <>
-      <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
-        <div className='text-center'>
-          <h1 className='mb-4 font-bold text-2xl text-white'>NPC Chat</h1>
-          <p className='mb-6 text-gray-300'>Talk to AI-powered characters</p>
-          {!authStatus && (
-            <p className='mb-4 text-yellow-400'>
-              You'll need to sign in with Puter to use AI features
-            </p>
-          )}
-          <Button disabled={isAuthenticating} onClick={onStart}>
-            {buttonContent}
-          </Button>
-        </div>
-        <SettingsSheet
-          enableTypingSound={enableTypingSound}
-          onNpcChange={onNpcChange}
-          selectedNpc={selectedNpc}
-          setEnableTypingSound={setEnableTypingSound}
-        />
+    <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
+      <div className='text-center'>
+        <h1 className='mb-4 font-bold text-2xl text-white'>NPC Chat</h1>
+        <p className='mb-6 text-gray-300'>Talk to AI-powered characters</p>
+        {!authStatus && (
+          <p className='mb-4 text-yellow-400'>
+            You'll need to sign in with Puter to use AI features
+          </p>
+        )}
+        <Button disabled={isAuthenticating} onClick={onStart}>
+          {buttonContent}
+        </Button>
       </div>
-      <audio
-        preload='auto'
-        ref={bgAudioRef}
-        src={`${import.meta.env.BASE_URL}/background.mp3`}>
-        <track kind='captions' />
-      </audio>
-    </>
+      <SettingsSheet
+        enableTypingSound={enableTypingSound}
+        onNpcChange={onNpcChange}
+        selectedNpc={selectedNpc}
+        setEnableTypingSound={setEnableTypingSound}
+      />
+    </div>
   )
 }

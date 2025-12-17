@@ -67,7 +67,10 @@ export const TypingAudio = ({
   }, [isTyping, isDelayed, enabled])
 
   return (
-    <audio preload='auto' ref={audioRef} src='/typing.mp3'>
+    <audio
+      preload='auto'
+      ref={audioRef}
+      src={`${import.meta.env.BASE_URL}typing.mp3`}>
       <track kind='captions' />
     </audio>
   )
