@@ -1,3 +1,5 @@
+const TYPING_SPEED = 50
+
 export const useAudioSamples = () => {
   const [isListening, setIsListening] = useState(false)
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
@@ -67,8 +69,8 @@ export const useTyping = (text: string, onComplete?: () => void) => {
   useEffect(() => {
     if (isTyping && currentIndex < text.length) {
       const char = text[currentIndex]
-      const delay = delays[char] || 100
-      if (delay > 100) {
+      const delay = delays[char] || TYPING_SPEED
+      if (delay > TYPING_SPEED) {
         setIsDelayed(true)
       }
       timeoutRef.current = window.setTimeout(() => {

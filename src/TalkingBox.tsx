@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { CharacterPortrait, DialogueBox, TypingAudio } from './components'
 import { useTyping } from './utils/hooks'
 
@@ -12,11 +13,10 @@ export const TalkingBox = ({ text, onComplete }: TalkingBoxProps) => {
   })
 
   return (
-    <div className='relative flex items-end gap-4'>
-      <CharacterPortrait />
+    <>
       <DialogueBox displayedText={displayedText} isTyping={isTyping} />
       <TypingAudio isDelayed={isDelayed} isTyping={isTyping} />
-    </div>
+    </>
   )
 }
 
@@ -24,15 +24,10 @@ export const Dialogue = () => {
   const [currentText, setCurrentText] = useState('')
   const [dialogueIndex, setDialogueIndex] = useState(0)
   const [started, setStarted] = useState(false)
+  const [finished, setFinished] = useState(false)
   const bgAudioRef = useRef<HTMLAudioElement>(null)
 
-  const dialogues = [
-    'Hello there! Welcome to this Undertale-style dialogue system.',
-    'This is a talking heads implementation with typewriter text effect.',
-    'The character portrait animates while speaking...',
-    'And each character makes a satisfying blip sound!',
-    'You can customize the text, timing, and animations as needed.'
-  ]
+  const dialogues = ['Salut beau gosse :) ! Je tiens juste à te souhaite une excellente journée, aurevoir !']
 
   useEffect(() => {
     if (started && dialogueIndex < dialogues.length) {
@@ -61,8 +56,8 @@ export const Dialogue = () => {
         setDialogueIndex((prev) => prev + 1)
       }, 2000)
     } else {
-      // Stop the background audio when dialogues reach the end
-      bgAudioRef.current?.pause()
+      // Unrender dialogue box when all dialogues reach the end, keep music
+      setFinished(true)
     }
   }
 
@@ -88,7 +83,10 @@ export const Dialogue = () => {
 
   return (
     <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
-      <TalkingBox onComplete={handleDialogueComplete} text={currentText} />
+      <div className='relative flex items-end gap-4'>
+        <CharacterPortrait />
+        {!finished && <TalkingBox onComplete={handleDialogueComplete} text={currentText} />}
+      </div>
       <audio preload='auto' ref={bgAudioRef} src='/background.mp3'>
         <track kind='captions' />
       </audio>
