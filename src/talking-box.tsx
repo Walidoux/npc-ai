@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import {
   CharacterPortrait,
   DialogueBox,
@@ -9,6 +10,7 @@ import {
 import { Button, Input } from './components/ui'
 import { type Message, sendChatMessage } from './services/ai'
 import { useSettings } from './store/settings'
+import { getSample } from './utils'
 import {
   useAuth,
   useBackgroundAudio,
@@ -48,6 +50,7 @@ export const Dialogue = () => {
   const [userMessage, setUserMessage] = useState('')
   const [isTypingResponse, setIsTypingResponse] = useState(false)
   const [started, setStarted] = useState(false)
+  const [currentResponse, setCurrentResponse] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   useKeySound()
@@ -69,6 +72,7 @@ export const Dialogue = () => {
       const message = userMessage.trim()
       setUserMessage('')
       setIsTypingResponse(true)
+      setCurrentResponse('')
 
       const userMessageObj: Message = {
         role: 'user',
@@ -91,8 +95,8 @@ export const Dialogue = () => {
           history,
           (chunk) => {
             _responseText += chunk
-            // Update displayed text in real-time for typing effect
-            // This will be handled by the TypingBox component
+            console.log(chunk)
+            setCurrentResponse((prev) => prev + chunk)
           },
         )
 
@@ -154,9 +158,12 @@ export const Dialogue = () => {
         aria-label='character-dialogue'
         className='relative mb-4 flex items-end gap-4'>
         <CharacterPortrait />
-        {lastMessage?.role === 'assistant' && (
+        {lastMessage?.role === 'assistant' && !isTypingResponse ? (
           <TalkingBox enabled={enableTypingSound} text={lastMessage.content} />
-        )}
+        ) : null}
+        {isTypingResponse ? (
+          <TalkingBox enabled={enableTypingSound} text={currentResponse} />
+        ) : null}
       </section>
 
       {/* Input */}
@@ -193,10 +200,7 @@ export const Dialogue = () => {
           showClearConversation={true}
         />
       </div>
-      <audio
-        preload='auto'
-        ref={bgAudioRef}
-        src={`${import.meta.env.BASE_URL}background.mp3`}>
+      <audio preload='auto' ref={bgAudioRef} src={getSample('background.mp3')}>
         <track kind='captions' />
       </audio>
     </main>

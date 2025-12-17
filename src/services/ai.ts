@@ -44,9 +44,8 @@ export const sendChatMessage = async (
 
   try {
     const response = await puter.ai.chat(messages, {
-      model: 'gpt-5-nano',
+      model: 'claude-sonnet-4',
       stream: !!onChunk,
-      max_tokens: 500, // Reasonable response length
       temperature: 1, // Default temperature for this model
     })
 

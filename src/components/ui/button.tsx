@@ -1,4 +1,3 @@
-import type { ButtonHTMLAttributes } from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { tv, type VariantProps } from 'tailwind-variants'
 import { cn } from '@/utils'
@@ -31,7 +30,7 @@ export const buttonVariants = tv({
 })
 
 export interface IButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }

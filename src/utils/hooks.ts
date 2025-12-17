@@ -1,6 +1,6 @@
-import { useRef } from 'react'
 import { authenticate, isAuthenticated } from '../services/ai'
 import { useSettings } from '../store/settings'
+import { getSample } from '.'
 
 const TYPING_SPEED = 50
 
@@ -160,9 +160,7 @@ const getSoundType = (key: string): string => {
 }
 
 const playSound = (type: string, event: 'keydown' | 'keyup') => {
-  const audio = new Audio(
-    `${import.meta.env.BASE_URL}keyboard/${type}_${event}.mp3`,
-  )
+  const audio = new Audio(getSample(`keyboard/${type}_${event}.mp3`))
   audio.play().catch(() => {
     // Ignore audio play errors
   })

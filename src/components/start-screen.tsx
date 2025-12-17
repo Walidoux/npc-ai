@@ -65,8 +65,6 @@ export const StartScreen = ({
   return (
     <div className='flex min-h-screen items-center justify-center p-8'>
       <div className='text-center'>
-        <h1 className='mb-4 font-bold text-2xl'>NPC Chat</h1>
-        <p className='mb-6'>Talk to AI-powered characters</p>
         {!authStatus && (
           <p className='mb-4'>
             You'll need to sign in with Puter to use AI features

@@ -2,7 +2,7 @@
 
 import { Root, type SwitchProps, Thumb } from '@radix-ui/react-switch'
 import { useSFX } from '@/utils/hooks'
-import { cn } from '@/utils/index'
+import { cn, getSample } from '@/utils/index'
 
 const Switch = ({ className, onCheckedChange, ...props }: SwitchProps) => {
   const { audioRef, play } = useSFX()
@@ -27,10 +27,7 @@ const Switch = ({ className, onCheckedChange, ...props }: SwitchProps) => {
           )}
         />
       </Root>
-      <audio
-        preload='auto'
-        ref={audioRef}
-        src={`${import.meta.env.BASE_URL}sfx/switch.mp3`}>
+      <audio preload='auto' ref={audioRef} src={getSample('sfx/switch.mp3')}>
         <track kind='captions' />
       </audio>
     </>

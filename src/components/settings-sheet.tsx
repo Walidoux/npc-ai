@@ -5,6 +5,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -30,7 +31,7 @@ export const SettingsSheet = ({
 }: SettingsSheetProps) => (
   <Sheet>
     <SheetTrigger asChild>
-      <Button className='p-2' size='icon'>
+      <Button className='p-2' size='icon' variant='secondary'>
         <SettingsIcon />
       </Button>
     </SheetTrigger>
@@ -39,7 +40,7 @@ export const SettingsSheet = ({
         <SheetTitle>Settings</SheetTitle>
         <SheetDescription>Adjust your preferences here.</SheetDescription>
       </SheetHeader>
-      <div className='mt-4'>
+      <div className='mt-4 px-4'>
         <h3 className='font-semibold text-lg'>Select Character</h3>
         <NpcSelector onNpcChange={onNpcChange} selectedNpc={selectedNpc} />
         {Boolean(showClearConversation) && (
@@ -54,8 +55,10 @@ export const SettingsSheet = ({
         )}
         <div className='mt-6'>
           <h3 className='font-semibold text-lg'>Sound Settings</h3>
-          <div className='mt-2 flex items-center justify-between'>
-            <label className='text-sm' htmlFor='typing-sound'>
+          <div className='mt-2 flex cursor-pointer items-center justify-between'>
+            <label
+              className='cursor-pointer select-none text-sm'
+              htmlFor='typing-sound'>
               Enable Typing Sound
             </label>
             <Switch
@@ -66,6 +69,7 @@ export const SettingsSheet = ({
           </div>
         </div>
       </div>
+      <SheetFooter />
     </SheetContent>
   </Sheet>
 )
