@@ -38,7 +38,7 @@ export const sendChatMessage = async (
   ] satisfies ChatMessage[]
 
   try {
-    const response = puter.ai.chat(messages, {
+    const response = await puter.ai.chat(messages, {
       model: 'gpt-5-nano',
       stream: !!onChunk,
       max_tokens: 500, // Reasonable response length

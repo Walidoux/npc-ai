@@ -1,5 +1,5 @@
 import { Root, Thumb } from '@radix-ui/react-switch'
-import { cn } from '@/utils/lib'
+import { cn } from '@/utils'
 
 function Switch({ className, ...props }: React.ComponentProps<typeof Root>) {
   return (

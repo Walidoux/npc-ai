@@ -1,6 +1,6 @@
 import { Close as CloseIcon } from '@nsmr/pixelart-react'
 import { Close, Content, Description, Overlay, Portal, Root, Title, Trigger } from '@radix-ui/react-dialog'
-import { cn } from '@/utils/lib'
+import { cn } from '@/utils'
 
 function Sheet({ ...props }: React.ComponentProps<typeof Root>) {
   return <Root data-slot='sheet' {...props} />

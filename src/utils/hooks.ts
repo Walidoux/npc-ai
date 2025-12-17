@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 const TYPING_SPEED = 50
 
 export const useAudioSamples = () => {
