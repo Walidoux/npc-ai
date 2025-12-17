@@ -1,5 +1,7 @@
+import { Dialogue } from "./TalkingBox";
+
 function App() {
-	return <div>{/* Blank app */}</div>;
+	return <Dialogue />;
 }
 
 export default App;
