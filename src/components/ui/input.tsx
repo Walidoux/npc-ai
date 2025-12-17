@@ -1,19 +1,19 @@
-import { cn } from '@/utils'
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  className?: string
+}
 
-function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
-  return (
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ type = 'text', placeholder = 'Enter text', className = '', ...props }, ref) => (
     <input
-      className={cn(
-        'h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] selection:bg-primary selection:text-primary-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30',
-        'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
-        'aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40',
-        className
-      )}
-      data-slot='input'
+      className={`w-full rounded border-2 px-4 py-2 shadow-md transition focus:shadow-xs focus:outline-hidden ${
+        props['aria-invalid'] ? 'border-destructive text-destructive shadow-destructive shadow-xs' : ''
+      } ${className}`}
+      placeholder={placeholder}
+      ref={ref}
       type={type}
       {...props}
     />
   )
-}
+)
 
-export { Input }
+Input.displayName = 'Input'

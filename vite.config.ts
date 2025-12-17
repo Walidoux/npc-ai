@@ -10,13 +10,13 @@ export default defineConfig({
     tailwindcss(),
     AutoImport({
       imports: ['react', 'react-dom'],
-      dts: 'src/auto-imports.d.ts'
-    })
+      dts: 'src/auto-imports.d.ts',
+    }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
-  server: { port: 3000 }
+  server: { port: 3000 },
 })

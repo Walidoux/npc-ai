@@ -14,7 +14,12 @@ export type ChatResponse = {
 
 // Generate system prompt from NPC personality
 export const createSystemPrompt = (personality: NPCPersonality): string => {
-  const { name, personality: personalityType, traits, description } = personality
+  const {
+    name,
+    personality: personalityType,
+    traits,
+    description,
+  } = personality
 
   return `You are ${name}, a character with the following personality: ${personalityType}.
 ${traits.length > 0 ? `Your key traits are: ${traits.join(', ')}.` : ''}
@@ -29,12 +34,12 @@ export const sendChatMessage = async (
   message: string,
   personality: NPCPersonality,
   conversationHistory: Message[] = [],
-  onChunk?: (chunk: string) => void
+  onChunk?: (chunk: string) => void,
 ): Promise<ChatResponse> => {
   const messages = [
     { role: 'system' as const, content: createSystemPrompt(personality) },
     ...conversationHistory.slice(-10), // Keep last 10 messages for context
-    { role: 'user' as const, content: message }
+    { role: 'user' as const, content: message },
   ] satisfies ChatMessage[]
 
   try {
@@ -42,14 +47,14 @@ export const sendChatMessage = async (
       model: 'gpt-5-nano',
       stream: !!onChunk,
       max_tokens: 500, // Reasonable response length
-      temperature: 1 // Default temperature for this model
+      temperature: 1, // Default temperature for this model
     })
 
     let fullMessage = ''
     const newMessage: Message = {
       role: 'assistant',
       content: '',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
 
     if (onChunk) {
@@ -71,12 +76,12 @@ export const sendChatMessage = async (
     const fullResponse: Message[] = [
       ...conversationHistory,
       { role: 'user', content: message, timestamp: Date.now() },
-      newMessage
+      newMessage,
     ]
 
     return {
       message: fullMessage,
-      fullResponse
+      fullResponse,
     }
   } catch (error) {
     console.error('AI chat error:', error)
@@ -85,12 +90,16 @@ export const sendChatMessage = async (
     const fallbackMessage: Message = {
       role: 'assistant',
       content: `I'm sorry, I couldn't process that right now. Let's try again later!`,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
 
     return {
       message: fallbackMessage.content,
-      fullResponse: [...conversationHistory, { role: 'user', content: message, timestamp: Date.now() }, fallbackMessage]
+      fullResponse: [
+        ...conversationHistory,
+        { role: 'user', content: message, timestamp: Date.now() },
+        fallbackMessage,
+      ],
     }
   }
 }

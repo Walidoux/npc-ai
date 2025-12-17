@@ -1,4 +1,7 @@
-import { NotesMultiple as HistoryIcon, Sliders2 as SettingsIcon } from '@nsmr/pixelart-react'
+import {
+  NotesMultiple as HistoryIcon,
+  Sliders2 as SettingsIcon,
+} from '@nsmr/pixelart-react'
 import { CharacterPortrait, DialogueBox, TypingAudio } from './components'
 import {
   Button,
@@ -9,17 +12,16 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  Switch
+  Spinner,
+  Switch,
 } from './components/ui'
+import { Dialog } from './components/ui/dialog'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from './components/ui/dialog'
-import { authenticate, isAuthenticated, type Message, sendChatMessage } from './services/ai'
+  authenticate,
+  isAuthenticated,
+  type Message,
+  sendChatMessage,
+} from './services/ai'
 import { useSettings } from './store/settings'
 import { useTyping } from './utils/hooks'
 import { npcMarkdowns, npcPersonalities, npcs } from './utils/npcs'
@@ -30,7 +32,11 @@ type TalkingBoxProps = {
   enabled?: boolean
 }
 
-export const TalkingBox = ({ text, onComplete, enabled = true }: TalkingBoxProps) => {
+export const TalkingBox = ({
+  text,
+  onComplete,
+  enabled = true,
+}: TalkingBoxProps) => {
   const { displayedText, isTyping, isDelayed } = useTyping(text, () => {
     onComplete?.()
   })
@@ -38,7 +44,11 @@ export const TalkingBox = ({ text, onComplete, enabled = true }: TalkingBoxProps
   return (
     <>
       <DialogueBox displayedText={displayedText} isTyping={isTyping} />
-      <TypingAudio enabled={enabled} isDelayed={isDelayed} isTyping={isTyping} />
+      <TypingAudio
+        enabled={enabled}
+        isDelayed={isDelayed}
+        isTyping={isTyping}
+      />
     </>
   )
 }
@@ -48,6 +58,7 @@ export const Dialogue = () => {
   const [isTypingResponse, setIsTypingResponse] = useState(false)
   const [started, setStarted] = useState(false)
   const [authChecked, setAuthChecked] = useState(false)
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
   const bgAudioRef = useRef<HTMLAudioElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const {
@@ -59,15 +70,14 @@ export const Dialogue = () => {
     addMessage,
     clearConversation,
     isAuthenticated: authStatus,
-    setIsAuthenticated
+    setIsAuthenticated,
   } = useSettings()
 
   // Check authentication on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const authenticated = await isAuthenticated()
-        setIsAuthenticated(authenticated)
+        setIsAuthenticated(await isAuthenticated())
       } catch (error) {
         console.error('Auth check failed:', error)
       } finally {
@@ -92,50 +102,55 @@ export const Dialogue = () => {
   }, [started])
 
   const handleSendMessage = async () => {
-    if (!userMessage.trim() || isTypingResponse || !authStatus) return
+    if (userMessage.trim() && !isTypingResponse && authStatus) {
+      const message = userMessage.trim()
+      setUserMessage('')
+      setIsTypingResponse(true)
 
-    const message = userMessage.trim()
-    setUserMessage('')
-    setIsTypingResponse(true)
-
-    const userMessageObj: Message = {
-      role: 'user',
-      content: message,
-      timestamp: Date.now()
-    }
-
-    // Add user message to history
-    addMessage(selectedNpc, userMessageObj)
-
-    try {
-      const personality = npcPersonalities[selectedNpc]
-      const history = conversationHistory[selectedNpc] || []
-
-      let responseText = ''
-
-      const response = await sendChatMessage(message, personality, history, (chunk) => {
-        responseText += chunk
-        // Update displayed text in real-time for typing effect
-        // This will be handled by the TypingBox component
-      })
-
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: response.message,
-        timestamp: Date.now()
+      const userMessageObj: Message = {
+        role: 'user',
+        content: message,
+        timestamp: Date.now(),
       }
 
-      addMessage(selectedNpc, assistantMessage)
-    } catch (error) {
-      console.error('Failed to send message:', error)
-      const errorMessage: Message = {
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: Date.now()
+      // Add user message to history
+      addMessage(selectedNpc, userMessageObj)
+
+      try {
+        const personality = npcPersonalities[selectedNpc]
+        const history = conversationHistory[selectedNpc] || []
+
+        let _responseText = ''
+
+        const response = await sendChatMessage(
+          message,
+          personality,
+          history,
+          (chunk) => {
+            _responseText += chunk
+            // Update displayed text in real-time for typing effect
+            // This will be handled by the TypingBox component
+          },
+        )
+
+        const assistantMessage: Message = {
+          role: 'assistant',
+          content: response.message,
+          timestamp: Date.now(),
+        }
+
+        addMessage(selectedNpc, assistantMessage)
+      } catch (error) {
+        console.error('Failed to send message:', error)
+        const errorMessage: Message = {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.',
+          timestamp: Date.now(),
+        }
+        addMessage(selectedNpc, errorMessage)
+      } finally {
+        setIsTypingResponse(false)
       }
-      addMessage(selectedNpc, errorMessage)
-    } finally {
-      setIsTypingResponse(false)
     }
   }
 
@@ -150,6 +165,7 @@ export const Dialogue = () => {
     if (authStatus) {
       setStarted(true)
     } else {
+      setIsAuthenticating(true)
       try {
         await authenticate()
         const authenticated = await isAuthenticated()
@@ -159,6 +175,8 @@ export const Dialogue = () => {
         }
       } catch (error) {
         console.error('Authentication failed:', error)
+      } finally {
+        setIsAuthenticating(false)
       }
     }
   }
@@ -175,12 +193,27 @@ export const Dialogue = () => {
   if (!authChecked) {
     return (
       <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
-        <div className='text-white'>Checking authentication...</div>
+        <Spinner className='mr-2' size='sm' />
+        Checking authentication...
       </div>
     )
   }
 
   if (!started) {
+    let buttonContent: React.ReactNode
+    if (isAuthenticating) {
+      buttonContent = (
+        <>
+          <Spinner className='mr-2' size='sm' />
+          Signing in...
+        </>
+      )
+    } else if (authStatus) {
+      buttonContent = 'Start Chatting'
+    } else {
+      buttonContent = 'Sign In & Start'
+    }
+
     return (
       <>
         <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
@@ -188,9 +221,13 @@ export const Dialogue = () => {
             <h1 className='mb-4 font-bold text-2xl text-white'>NPC Chat</h1>
             <p className='mb-6 text-gray-300'>Talk to AI-powered characters</p>
             {!isAuthenticated && (
-              <p className='mb-4 text-yellow-400'>You'll need to sign in with Puter to use AI features</p>
+              <p className='mb-4 text-yellow-400'>
+                You'll need to sign in with Puter to use AI features
+              </p>
             )}
-            <Button onClick={handleStart}>{authStatus ? 'Start Chatting' : 'Sign In & Start'}</Button>
+            <Button disabled={isAuthenticating} onClick={handleStart}>
+              {buttonContent}
+            </Button>
           </div>
           <Sheet>
             <SheetTrigger asChild>
@@ -201,7 +238,9 @@ export const Dialogue = () => {
             <SheetContent>
               <SheetHeader>
                 <SheetTitle>Settings</SheetTitle>
-                <SheetDescription>Adjust your preferences here.</SheetDescription>
+                <SheetDescription>
+                  Adjust your preferences here.
+                </SheetDescription>
               </SheetHeader>
               <div className='mt-4'>
                 <h3 className='font-semibold text-lg'>Select Character</h3>
@@ -214,12 +253,20 @@ export const Dialogue = () => {
                     return (
                       <button
                         className={`flex cursor-pointer flex-col items-center gap-2 rounded border p-4 ${
-                          isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                          isSelected
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-300'
                         }`}
                         key={name}
                         onClick={() => handleNpcChange(name)}
                         type='button'>
-                        <img alt={name} className='h-16 w-16 object-cover' height={64} src={url} width={64} />
+                        <img
+                          alt={name}
+                          className='h-16 w-16 object-cover'
+                          height={64}
+                          src={url}
+                          width={64}
+                        />
                         <div className='text-center text-sm'>{mdContent}</div>
                       </button>
                     )
@@ -231,7 +278,11 @@ export const Dialogue = () => {
                     <label className='text-sm' htmlFor='typing-sound'>
                       Enable Typing Sound
                     </label>
-                    <Switch checked={enableTypingSound} id='typing-sound' onCheckedChange={setEnableTypingSound} />
+                    <Switch
+                      checked={enableTypingSound}
+                      id='typing-sound'
+                      onCheckedChange={setEnableTypingSound}
+                    />
                   </div>
                 </div>
               </div>
@@ -248,9 +299,16 @@ export const Dialogue = () => {
   return (
     <>
       <main className='flex min-h-screen flex-col items-center justify-center bg-gray-900 p-8'>
-        <section aria-label='character-dialogue' className='relative mb-4 flex items-end gap-4'>
+        <section
+          aria-label='character-dialogue'
+          className='relative mb-4 flex items-end gap-4'>
           <CharacterPortrait />
-          {lastMessage?.role === 'assistant' && <TalkingBox enabled={enableTypingSound} text={lastMessage.content} />}
+          {lastMessage?.role === 'assistant' && (
+            <TalkingBox
+              enabled={enableTypingSound}
+              text={lastMessage.content}
+            />
+          )}
         </section>
 
         {/* Input */}
@@ -264,7 +322,9 @@ export const Dialogue = () => {
             type='text'
             value={userMessage}
           />
-          <Button disabled={!userMessage.trim() || isTypingResponse} onClick={handleSendMessage}>
+          <Button
+            disabled={!userMessage.trim() || isTypingResponse}
+            onClick={handleSendMessage}>
             {isTypingResponse ? '...' : 'Send'}
           </Button>
         </div>
@@ -272,28 +332,37 @@ export const Dialogue = () => {
         {/* History and Settings */}
         <div className='fixed top-4 right-4 flex gap-2'>
           <Dialog>
-            <DialogTrigger asChild>
+            <Dialog.Trigger asChild>
               <Button size='icon' variant='outline'>
                 <HistoryIcon />
               </Button>
-            </DialogTrigger>
-            <DialogContent className='max-h-[80vh] max-w-2xl'>
-              <DialogHeader>
-                <DialogTitle>Conversation History</DialogTitle>
-                <DialogDescription>
-                  Your chat history with {npcPersonalities[selectedNpc]?.name || selectedNpc}
-                </DialogDescription>
-              </DialogHeader>
+            </Dialog.Trigger>
+            <Dialog.Content size='2xl' className='max-h-[80vh]'>
+              <Dialog.Header>
+                <div className='font-head text-xl font-bold'>
+                  Conversation History
+                </div>
+                <Dialog.Description>
+                  Your chat history with{' '}
+                  {npcPersonalities[selectedNpc]?.name || selectedNpc}
+                </Dialog.Description>
+              </Dialog.Header>
               <div className='max-h-[60vh] overflow-y-auto'>
                 <div className='space-y-4'>
                   {currentHistory.length === 0 ? (
-                    <p className='text-center text-gray-500'>No messages yet. Start a conversation!</p>
+                    <p className='text-center text-gray-500'>
+                      No messages yet. Start a conversation!
+                    </p>
                   ) : (
                     currentHistory.map((msg, index) => (
-                      <div className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`} key={index}>
+                      <div
+                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        key={index}>
                         <div
                           className={`max-w-xs rounded-lg px-4 py-2 ${
-                            msg.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-700 text-white'
+                            msg.role === 'user'
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-gray-700 text-white'
                           }`}>
                           {msg.content}
                         </div>
@@ -302,7 +371,7 @@ export const Dialogue = () => {
                   )}
                 </div>
               </div>
-            </DialogContent>
+            </Dialog.Content>
           </Dialog>
           <Sheet>
             <SheetTrigger asChild>
@@ -313,7 +382,9 @@ export const Dialogue = () => {
             <SheetContent>
               <SheetHeader>
                 <SheetTitle>Settings</SheetTitle>
-                <SheetDescription>Adjust your preferences here.</SheetDescription>
+                <SheetDescription>
+                  Adjust your preferences here.
+                </SheetDescription>
               </SheetHeader>
               <div className='mt-4'>
                 <h3 className='font-semibold text-lg'>Select Character</h3>
@@ -326,19 +397,30 @@ export const Dialogue = () => {
                     return (
                       <button
                         className={`flex cursor-pointer flex-col items-center gap-2 rounded border p-4 ${
-                          isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                          isSelected
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-300'
                         }`}
                         key={name}
                         onClick={() => handleNpcChange(name)}
                         type='button'>
-                        <img alt={name} className='h-16 w-16 object-cover' height={64} src={url} width={64} />
+                        <img
+                          alt={name}
+                          className='h-16 w-16 object-cover'
+                          height={64}
+                          src={url}
+                          width={64}
+                        />
                         <div className='text-center text-sm'>{mdContent}</div>
                       </button>
                     )
                   })}
                 </div>
                 <div className='mt-6'>
-                  <Button className='w-full' onClick={() => clearConversation(selectedNpc)} variant='outline'>
+                  <Button
+                    className='w-full'
+                    onClick={() => clearConversation(selectedNpc)}
+                    variant='outline'>
                     Clear Conversation
                   </Button>
                 </div>
@@ -348,7 +430,11 @@ export const Dialogue = () => {
                     <label className='text-sm' htmlFor='typing-sound'>
                       Enable Typing Sound
                     </label>
-                    <Switch checked={enableTypingSound} id='typing-sound' onCheckedChange={setEnableTypingSound} />
+                    <Switch
+                      checked={enableTypingSound}
+                      id='typing-sound'
+                      onCheckedChange={setEnableTypingSound}
+                    />
                   </div>
                 </div>
               </div>

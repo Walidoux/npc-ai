@@ -23,16 +23,17 @@ export const useSettings = create<SettingsState>((set) => ({
     set((state) => ({
       conversationHistory: {
         ...state.conversationHistory,
-        [npc]: [...(state.conversationHistory[npc] || []), message]
-      }
+        [npc]: [...(state.conversationHistory[npc] || []), message],
+      },
     })),
   clearConversation: (npc) =>
     set((state) => ({
       conversationHistory: {
         ...state.conversationHistory,
-        [npc]: []
-      }
+        [npc]: [],
+      },
     })),
   isAuthenticated: false,
-  setIsAuthenticated: (authenticated) => set({ isAuthenticated: authenticated })
+  setIsAuthenticated: (authenticated) =>
+    set({ isAuthenticated: authenticated }),
 }))

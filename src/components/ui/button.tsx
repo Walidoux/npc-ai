@@ -1,56 +1,51 @@
+import type { ButtonHTMLAttributes } from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { tv, type VariantProps } from 'tailwind-variants'
 import { cn } from '@/utils'
 
-const buttonVariants = tv({
-  base: "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+export const buttonVariants = tv({
+  base: 'flex cursor-pointer items-center rounded font-head font-medium outline-hidden transition-all duration-200',
+
   variants: {
     variant: {
-      default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-      destructive:
-        'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40',
+      default:
+        'border-2 border-black bg-primary text-primary-foreground shadow-md transition hover:translate-y-1 hover:bg-primary-hover hover:shadow active:translate-x-1 active:translate-y-2 active:shadow-none',
+      secondary:
+        'border-2 border-black bg-secondary text-secondary-foreground shadow-md shadow-primary transition hover:translate-y-1 hover:bg-secondary-hover hover:shadow active:translate-x-1 active:translate-y-2 active:shadow-none',
       outline:
-        'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
-      secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-      ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
-      link: 'text-primary underline-offset-4 hover:underline'
+        'border-2 bg-transparent shadow-md transition hover:translate-y-1 hover:shadow active:translate-x-1 active:translate-y-2 active:shadow-none',
+      link: 'bg-transparent hover:underline',
+      ghost: 'bg-transparent hover:bg-accent'
     },
     size: {
-      default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-      sm: 'h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5',
-      lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-      icon: 'size-9',
-      'icon-sm': 'size-8',
-      'icon-lg': 'size-10'
+      sm: 'px-3 py-1 text-sm shadow hover:shadow-none',
+      md: 'px-4 py-1.5 text-base',
+      lg: 'px-6 py-2 text-md lg:px-8 lg:py-3 lg:text-lg',
+      icon: 'p-2'
     }
   },
   defaultVariants: {
-    variant: 'default',
-    size: 'default'
+    size: 'md',
+    variant: 'default'
   }
 })
 
-function Button({
-  className,
-  variant = 'default',
-  size = 'default',
-  asChild = false,
-  ...props
-}: React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot : 'button'
-
-  return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      data-size={size}
-      data-slot='button'
-      data-variant={variant}
-      {...props}
-    />
-  )
+export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+  asChild?: boolean
 }
 
-export { Button, buttonVariants }
+export const Button = forwardRef<HTMLButtonElement, IButtonProps>(
+  (
+    { children, size = 'md', className = '', variant = 'default', asChild = false, ...props }: IButtonProps,
+    forwardedRef
+  ) => {
+    const Comp = asChild ? Slot : 'button'
+    return (
+      <Comp className={cn(buttonVariants({ variant, size }), className)} ref={forwardedRef} {...props}>
+        {children}
+      </Comp>
+    )
+  }
+)
+
+Button.displayName = 'Button'

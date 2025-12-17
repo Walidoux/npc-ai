@@ -1,0 +1,21 @@
+@import '@fontsource/vt323';
+@import 'tailwindcss';
+@import './globals.css';
+
+@layer utilities {
+  .arrow-down::after {
+    position: absolute;
+    bottom: -8px;
+    left: 21px;
+    width: 0;
+    height: 0;
+    content: '';
+    border-top: 7px solid #fff;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+  }
+
+  .dialogue {
+    font-family: 'VT323', monospace;
+  }
+}
