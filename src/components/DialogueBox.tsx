@@ -1,14 +1,11 @@
-import styles from '../styles/dialogue.module.css'
-import { cn } from '../utils/lib'
-
 type DialogueBoxProps = {
   displayedText: string
   isTyping: boolean
 }
 
 export const DialogueBox = ({ displayedText, isTyping }: DialogueBoxProps) => (
-  <div className={cn('relative w-100 border border-white bg-black p-4 text-white', styles.container)}>
-    <p className='select-none font-mono text-sm leading-relaxed'>
+  <div className='arrow-down absolute bottom-42 left-8 w-70 rounded-xl border border-white bg-black p-4 text-white'>
+    <p className='dialogue select-none font-mono text-xl leading-5 tracking-wide'>
       {displayedText}
       {Boolean(isTyping) && <span className='animate-pulse'>|</span>}
     </p>

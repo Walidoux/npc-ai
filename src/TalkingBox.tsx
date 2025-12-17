@@ -1,4 +1,4 @@
-import { AudioControls, CharacterPortrait, DialogueBox, TypingAudio } from './components'
+import { CharacterPortrait, DialogueBox, TypingAudio } from './components'
 import { useTyping } from './utils/hooks'
 
 type TalkingBoxProps = {
@@ -7,7 +7,7 @@ type TalkingBoxProps = {
 }
 
 export const TalkingBox = ({ text, onComplete }: TalkingBoxProps) => {
-  const { displayedText, isTyping, stopTyping, isDelayed } = useTyping(text, () => {
+  const { displayedText, isTyping, isDelayed } = useTyping(text, () => {
     onComplete?.()
   })
 
@@ -15,7 +15,6 @@ export const TalkingBox = ({ text, onComplete }: TalkingBoxProps) => {
     <div className='relative flex items-end gap-4'>
       <CharacterPortrait />
       <DialogueBox displayedText={displayedText} isTyping={isTyping} />
-      <AudioControls stopTyping={stopTyping} />
       <TypingAudio isDelayed={isDelayed} isTyping={isTyping} />
     </div>
   )
@@ -61,6 +60,9 @@ export const Dialogue = () => {
       setTimeout(() => {
         setDialogueIndex((prev) => prev + 1)
       }, 2000)
+    } else {
+      // Stop the background audio when dialogues reach the end
+      bgAudioRef.current?.pause()
     }
   }
 

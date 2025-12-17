@@ -1,38 +1,108 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": false
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab"
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "correctness": {
-        "noUndeclaredVariables": "off"
-      }
-    }
-  },
-  "javascript": {
+  "extends": ["ultracite/core", "ultracite/react", "ultracite/next"],
+
+  "css": {
     "formatter": {
-      "quoteStyle": "double"
+      "enabled": true,
+      "indentStyle": "space",
+      "lineEnding": "lf",
+      "quoteStyle": "single"
+    },
+    "linter": {
+      "enabled": false
     }
   },
+
   "assist": {
     "enabled": true,
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [{ "type": true }]
+          }
+        },
+        "useSortedAttributes": "on",
+        "useSortedProperties": "on"
       }
     }
   },
-  "extends": ["ultracite/core"]
+
+  "formatter": {
+    "attributePosition": "auto",
+    "bracketSameLine": true,
+    "bracketSpacing": true,
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80
+  },
+
+  "javascript": {
+    "formatter": {
+      "bracketSameLine": true,
+      "jsxQuoteStyle": "single",
+      "lineEnding": "lf",
+      "quoteStyle": "single",
+      "semicolons": "asNeeded",
+      "trailingCommas": "all"
+    }
+  },
+
+  "linter": {
+    "enabled": true,
+    "domains": {
+      "next": "recommended"
+    },
+    "rules": {
+      "recommended": true,
+      "performance": {
+        "noImgElement": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "noExplicitAny": "warn"
+      },
+      "complexity": {
+        "noUselessFragments": "warn"
+      },
+      "a11y": {
+        "useMediaCaption": "off",
+        "useKeyWithClickEvents": "off",
+        "noStaticElementInteractions": "off",
+        "noNoninteractiveTabindex": "off"
+      },
+      "correctness": {
+        "noUnusedImports": {
+          "fix": "safe",
+          "level": "warn",
+          "options": {}
+        },
+        "noUnusedVariables": {
+          "level": "warn",
+          "options": {
+            "ignoreRestSiblings": true
+          }
+        },
+        "noUndeclaredVariables": "off"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "fix": "safe",
+          "level": "info",
+          "options": {}
+        }
+      }
+    }
+  },
+
+  "vcs": {
+    "clientKind": "git",
+    "enabled": true,
+    "useIgnoreFile": true
+  }
 }

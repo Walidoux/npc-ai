@@ -4,6 +4,8 @@
     "": {
       "name": "vite-tailwind-app",
       "dependencies": {
+        "@fontsource/press-start-2p": "^5.2.7",
+        "@fontsource/vt323": "^5.2.7",
         "@tailwindcss/vite": "^4.1.18",
         "clsx": "^2.1.1",
         "react": "^19.2.0",
@@ -137,6 +139,10 @@
     "@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.27.1", "", { "os": "win32", "cpu": "ia32" }, "sha512-2BR5M8CPbptC1AK5JbJT1fWrHLvejwZidKx3UMSF0ecHMa+smhi16drIrCEggkgviBwLYd5nwrFLSl5Kho96RQ=="],
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.27.1", "", { "os": "win32", "cpu": "x64" }, "sha512-d5X6RMYv6taIymSk8JBP+nxv8DQAMY6A51GPgusqLdK9wBz5wWIXy1KjTck6HnjE9hqJzJRdk+1p/t5soSbCtw=="],
+
+    "@fontsource/press-start-2p": ["@fontsource/press-start-2p@5.2.7", "", {}, "sha512-ezSxYRchANoteja170ZHh2Tt4oejmVEvX42VFPOVVvERSZ68pcuZFjbhHfrK/sNjYmaGg656y7B3431ojO9PCQ=="],
+
+    "@fontsource/vt323": ["@fontsource/vt323@5.2.7", "", {}, "sha512-8JTMM23vMhQxin9Cn/ijty8cNwXW4INrln0VAJ2227Rz0CVfkzM3qr3l/CqudZJ6BXCnbCGUTdf2ym3cTNex8A=="],
 
     "@isaacs/balanced-match": ["@isaacs/balanced-match@4.0.1", "", {}, "sha512-yzMTt9lEb8Gv7zRioUilSglI0c0smZ9k5D65677DLWLtWJaXIS3CqcGyUFByYKlnUj6TkjLVs54fBl6+TiGQDQ=="],
 
