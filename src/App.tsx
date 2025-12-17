@@ -1,4 +1,4 @@
-import { Dialogue } from './TalkingBox'
+import { Dialogue } from './talking-box'
 
 function App() {
   return <Dialogue />

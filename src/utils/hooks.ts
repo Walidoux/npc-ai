@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 const TYPING_SPEED = 50
 
 export const useAudioSamples = () => {
@@ -55,7 +57,7 @@ export const useTyping = (text: string, onComplete?: () => void) => {
     ',': 200,
     '?': 400,
     ':': 200,
-    ';': 200
+    ';': 200,
   }
 
   useEffect(() => {
@@ -102,4 +104,57 @@ export const useTyping = (text: string, onComplete?: () => void) => {
   }
 
   return { displayedText, isTyping, currentIndex, stopTyping, isDelayed }
+}
+
+export const useKeySound = () => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isInputFocused()) {
+        const soundType = getSoundType(event.key)
+        playSound(soundType, 'keydown')
+      }
+    }
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (isInputFocused()) {
+        const soundType = getSoundType(event.key)
+        playSound(soundType, 'keyup')
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [])
+}
+
+const isInputFocused = (): boolean => {
+  const active = document.activeElement
+  return (
+    active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement
+  )
+}
+
+const getSoundType = (key: string): string => {
+  switch (key) {
+    case 'Backspace':
+      return 'backspace'
+    case 'Enter':
+      return 'enter'
+    case ' ':
+      return 'space'
+    default:
+      return 'default'
+  }
+}
+
+const playSound = (type: string, event: 'keydown' | 'keyup') => {
+  const audio = new Audio(`/keyboard/${type}_${event}.mp3`)
+  audio.play().catch(() => {
+    // Ignore audio play errors
+  })
 }

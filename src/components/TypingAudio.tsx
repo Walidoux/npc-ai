@@ -1,20 +1,25 @@
 type TypingAudioProps = {
   isTyping: boolean
   isDelayed: boolean
+  enabled: boolean
 }
 
-export const TypingAudio = ({ isTyping, isDelayed }: TypingAudioProps) => {
+export const TypingAudio = ({
+  isTyping,
+  isDelayed,
+  enabled,
+}: TypingAudioProps) => {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    if (isTyping && audioRef.current) {
+    if (isTyping && enabled && audioRef.current) {
       audioRef.current.currentTime = 0
       audioRef.current.loop = true
       audioRef.current.play().catch(() => {
         // Ignore audio play errors
       })
     }
-  }, [isTyping])
+  }, [isTyping, enabled])
 
   // Handle audio looping for first 2 seconds
   useEffect(() => {
@@ -30,7 +35,7 @@ export const TypingAudio = ({ isTyping, isDelayed }: TypingAudioProps) => {
     }
 
     const handleEnded = () => {
-      if (isTyping) {
+      if (isTyping && enabled) {
         audio.currentTime = 0
         audio.play().catch(() => {
           // Ignore audio play errors
@@ -49,17 +54,17 @@ export const TypingAudio = ({ isTyping, isDelayed }: TypingAudioProps) => {
 
   // Stop audio when typing ends or when delayed
   useEffect(() => {
-    if ((!isTyping || isDelayed) && audioRef.current) {
+    if ((!isTyping || isDelayed || !enabled) && audioRef.current) {
       audioRef.current.pause()
       if (!isTyping) {
         audioRef.current.currentTime = 0
       }
-    } else if (isTyping && !isDelayed && audioRef.current) {
+    } else if (isTyping && !isDelayed && enabled && audioRef.current) {
       audioRef.current.play().catch(() => {
         // Ignore audio play errors
       })
     }
-  }, [isTyping, isDelayed])
+  }, [isTyping, isDelayed, enabled])
 
   return (
     <audio preload='auto' ref={audioRef} src='/typing.mp3'>

@@ -1,5 +1,9 @@
+import { useSettings } from '../store/settings'
+import { npcs } from '../utils/npcs'
+
 export const CharacterPortrait = () => {
-  const randomNpc = useMemo(() => Math.floor(Math.random() * 3) + 1, [])
+  const { selectedNpc } = useSettings()
+  const npcUrl = npcs[`/src/assets/npcs/${selectedNpc}/animated.gif`]
 
   return (
     <div className='relative'>
@@ -8,7 +12,7 @@ export const CharacterPortrait = () => {
         className='select-none object-cover'
         draggable={false}
         height={128}
-        src={`/npcs/npc_${randomNpc}/animated.gif`}
+        src={npcUrl}
         width={128}
       />
     </div>
