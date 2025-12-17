@@ -1,29 +1,15 @@
 .container {
-	box-shadow: 0 4px 4px 4px rgba(255, 255, 255, 1);
-	font-family: "Determination Mono", "Courier New", monospace;
-}
-
-.container::before {
-	content: "";
-	position: absolute;
-	bottom: -12px;
-	left: 20px;
-	width: 0;
-	height: 0;
-	border-left: 12px solid transparent;
-	border-right: 12px solid transparent;
-	border-top: 12px solid #000;
-	border-top-color: inherit;
+  font-family: 'Determination Mono', 'Courier New', monospace;
 }
 
 .container::after {
-	content: "";
-	position: absolute;
-	bottom: -10px;
-	left: 21px;
-	width: 0;
-	height: 0;
-	border-left: 11px solid transparent;
-	border-right: 11px solid transparent;
-	border-top: 11px solid #fff;
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 21px;
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 11px solid #fff;
 }

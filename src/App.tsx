@@ -1,7 +1,7 @@
-import { Dialogue } from "./TalkingBox";
+import { Dialogue } from './TalkingBox'
 
 function App() {
-	return <Dialogue />;
+  return <Dialogue />
 }
 
-export default App;
+export default App

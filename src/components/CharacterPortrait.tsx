@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 export const CharacterPortrait = () => {
   const randomNpc = useMemo(() => Math.floor(Math.random() * 3) + 1, [])
 

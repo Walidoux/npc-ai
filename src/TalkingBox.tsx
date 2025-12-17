@@ -1,8 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import { AudioControls } from './components/AudioControls'
-import { CharacterPortrait } from './components/CharacterPortrait'
-import { DialogueBox } from './components/DialogueBox'
-import { TypingAudio } from './components/TypingAudio'
+import { AudioControls, CharacterPortrait, DialogueBox, TypingAudio } from './components'
 import { useTyping } from './utils/hooks'
 
 type TalkingBoxProps = {
@@ -16,7 +12,7 @@ export const TalkingBox = ({ text, onComplete }: TalkingBoxProps) => {
   })
 
   return (
-    <div className='flex items-end gap-4'>
+    <div className='relative flex items-end gap-4'>
       <CharacterPortrait />
       <DialogueBox displayedText={displayedText} isTyping={isTyping} />
       <AudioControls stopTyping={stopTyping} />

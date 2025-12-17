@@ -8,7 +8,7 @@ type DialogueBoxProps = {
 
 export const DialogueBox = ({ displayedText, isTyping }: DialogueBoxProps) => (
   <div className={cn('relative w-100 border border-white bg-black p-4 text-white', styles.container)}>
-    <p className='font-mono text-sm leading-relaxed'>
+    <p className='select-none font-mono text-sm leading-relaxed'>
       {displayedText}
       {Boolean(isTyping) && <span className='animate-pulse'>|</span>}
     </p>
