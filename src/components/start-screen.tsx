@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import { SettingsSheet } from './settings-sheet'
 import { Button, Spinner } from './ui'
 
@@ -24,7 +25,7 @@ export const StartScreen = ({
 }: StartScreenProps) => {
   if (!authChecked) {
     return (
-      <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
+      <div className='flex min-h-screen items-center justify-center p-8'>
         <Spinner className='mr-2' size='sm' />
         Checking authentication...
       </div>
@@ -45,13 +46,22 @@ export const StartScreen = ({
     buttonContent = 'Sign In & Start'
   }
 
+  // biome-ignore lint/correctness/useHookAtTopLevel: attended
+  useEffect(() => {
+    toast('We do not use cookies', {
+      description: 'AI feature is completely free of use',
+      classNames: { content: 'mr-8' },
+      cancel: { label: 'OK !', onClick: () => {} },
+    })
+  }, [])
+
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
+    <div className='flex min-h-screen items-center justify-center p-8'>
       <div className='text-center'>
-        <h1 className='mb-4 font-bold text-2xl text-white'>NPC Chat</h1>
-        <p className='mb-6 text-gray-300'>Talk to AI-powered characters</p>
+        <h1 className='mb-4 font-bold text-2xl'>NPC Chat</h1>
+        <p className='mb-6'>Talk to AI-powered characters</p>
         {!authStatus && (
-          <p className='mb-4 text-yellow-400'>
+          <p className='mb-4'>
             You'll need to sign in with Puter to use AI features
           </p>
         )}

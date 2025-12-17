@@ -11,7 +11,7 @@
     "source.addMissingImports.ts": "always"
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "tailwindCSS.experimental.configFile": "packages/design/styles/globals.css",
+  "tailwindCSS.experimental.configFile": "./src/styles/globals.css",
 
   "files.exclude": {
     "playwright-report": true,

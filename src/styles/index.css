@@ -2,6 +2,12 @@
 @import 'tailwindcss';
 @import './globals.css';
 
+@layer base {
+  body {
+    @apply bg-background;
+  }
+}
+
 @layer utilities {
   .arrow-down::after {
     position: absolute;

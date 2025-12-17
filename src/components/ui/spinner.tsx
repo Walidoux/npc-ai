@@ -7,7 +7,7 @@ interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Spinner = ({ className, size = 'md', ...props }: SpinnerProps) => (
   <div
     className={cn(
-      'animate-spin rounded-full border-2 border-gray-300 border-t-gray-600',
+      'animate-spin rounded-full border-2 border-black/30 border-t-black',
       {
         'h-4 w-4': size === 'sm',
         'h-6 w-6': size === 'md',

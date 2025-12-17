@@ -109,9 +109,12 @@ export const useTyping = (text: string, onComplete?: () => void) => {
 }
 
 export const useKeySound = () => {
+  const pressedKeys = useRef<Set<string>>(new Set())
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isInputFocused()) {
+      if (isInputFocused() && !pressedKeys.current.has(event.key)) {
+        pressedKeys.current.add(event.key)
         const soundType = getSoundType(event.key)
         playSound(soundType, 'keydown')
       }
@@ -121,6 +124,7 @@ export const useKeySound = () => {
       if (isInputFocused()) {
         const soundType = getSoundType(event.key)
         playSound(soundType, 'keyup')
+        pressedKeys.current.delete(event.key)
       }
     }
 
@@ -130,6 +134,7 @@ export const useKeySound = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
+      pressedKeys.current.clear()
     }
   }, [])
 }
@@ -155,7 +160,9 @@ const getSoundType = (key: string): string => {
 }
 
 const playSound = (type: string, event: 'keydown' | 'keyup') => {
-  const audio = new Audio(`/keyboard/${type}_${event}.mp3`)
+  const audio = new Audio(
+    `${import.meta.env.BASE_URL}keyboard/${type}_${event}.mp3`,
+  )
   audio.play().catch(() => {
     // Ignore audio play errors
   })
@@ -223,7 +230,6 @@ export const useBackgroundAudio = (started: boolean) => {
 
   useEffect(() => {
     const play = async () => {
-      console.log(Boolean(started && bgAudioRef.current))
       if (started && bgAudioRef.current) {
         bgAudioRef.current.loop = true
         try {

@@ -9,7 +9,12 @@ import {
 import { Button, Input } from './components/ui'
 import { type Message, sendChatMessage } from './services/ai'
 import { useSettings } from './store/settings'
-import { useAuth, useBackgroundAudio, useTyping } from './utils/hooks'
+import {
+  useAuth,
+  useBackgroundAudio,
+  useKeySound,
+  useTyping,
+} from './utils/hooks'
 import { npcPersonalities } from './utils/npcs'
 
 type TalkingBoxProps = {
@@ -44,6 +49,8 @@ export const Dialogue = () => {
   const [isTypingResponse, setIsTypingResponse] = useState(false)
   const [started, setStarted] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useKeySound()
   const {
     selectedNpc,
     setSelectedNpc,
@@ -142,7 +149,7 @@ export const Dialogue = () => {
   }
 
   return (
-    <main className='flex min-h-screen flex-col items-center justify-center bg-gray-900 p-8'>
+    <main className='flex min-h-screen flex-col items-center justify-center p-8'>
       <section
         aria-label='character-dialogue'
         className='relative mb-4 flex items-end gap-4'>
