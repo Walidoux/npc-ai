@@ -23,15 +23,18 @@ type TalkingBoxProps = {
   text: string
   onComplete?: () => void
   enabled?: boolean
+  isStreamComplete?: boolean
 }
 
 export const TalkingBox = ({
   text,
   onComplete,
   enabled = true,
+  isStreamComplete = true,
 }: TalkingBoxProps) => {
-  const { displayedText, isTyping, isDelayed } = useTyping(text, () => {
-    onComplete?.()
+  const { displayedText, isTyping, isDelayed } = useTyping(text, {
+    onComplete,
+    isStreamComplete,
   })
 
   return (
@@ -157,9 +160,13 @@ export const Dialogue = () => {
         aria-label='character-dialogue'
         className='relative mb-4 flex items-end gap-4'>
         <CharacterPortrait />
-        {isTypingResponse ? (
-          <TalkingBox enabled={enableTypingSound} text={currentResponse} />
-        ) : null}
+        {(isTypingResponse || currentResponse) && (
+          <TalkingBox
+            enabled={enableTypingSound}
+            isStreamComplete={!isTypingResponse}
+            text={currentResponse} // ✅ Pass streaming state
+          />
+        )}
       </section>
 
       {/* Input */}

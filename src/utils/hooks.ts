@@ -2,8 +2,6 @@ import { authenticate, isAuthenticated } from '../services/ai'
 import { useSettings } from '../store/settings'
 import { getSample } from '.'
 
-const TYPING_SPEED = 50
-
 export const useAudioSamples = () => {
   const [isListening, setIsListening] = useState(false)
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
@@ -46,75 +44,87 @@ export const useAudioSamples = () => {
   return { startListening, stopListening, isListening, audioBlob }
 }
 
+const TYPING_SPEED = 30
 const TYPING_DELAYS: Record<string, number> = {
-  '!': 500,
   '.': 300,
-  ',': 200,
-  '?': 400,
+  ',': 150,
+  '!': 300,
+  '?': 300,
   ':': 200,
   ';': 200,
 }
 
-export const useTyping = (text: string, onComplete?: () => void) => {
-  const [displayedText, setDisplayedText] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [isDelayed, setIsDelayed] = useState(false)
-  const timeoutRef = useRef<number>(null)
+type UseTypingOptions = {
+  onComplete?: () => void
+  isStreamComplete?: boolean
+}
 
+export function useTyping(text: string, options: UseTypingOptions = {}) {
+  const { onComplete, isStreamComplete = true } = options
+
+  const [displayedText, setDisplayedText] = useState('')
+  const [isDelayed, setIsDelayed] = useState(false)
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
+  const onCompleteCalledRef = useRef(false)
+
+  const isTyping = text.length > 0 && displayedText.length < text.length
+
+  // Reset when text changes incompatibly
   useEffect(() => {
     if (!text) {
-      // Reset when text is empty
-      setIsTyping(false)
-      setCurrentIndex(0)
       setDisplayedText('')
       setIsDelayed(false)
+      onCompleteCalledRef.current = false
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
       return
     }
 
-    // Check if text changed significantly
-    const textChanged = !text.startsWith(displayedText)
-    if (textChanged) {
-      // Restart typing
-      setIsTyping(true)
-      setCurrentIndex(0)
+    if (!text.startsWith(displayedText)) {
       setDisplayedText('')
       setIsDelayed(false)
+      onCompleteCalledRef.current = false
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
-    } else if (!isTyping && currentIndex < text.length) {
-      // Continue typing
-      setIsTyping(true)
     }
-  }, [text, displayedText, isTyping, currentIndex])
+  }, [text, displayedText])
 
+  // Main typing animation
   useEffect(() => {
-    if (isTyping && currentIndex < text.length) {
-      const char = text[currentIndex]
-      const extraDelay = TYPING_DELAYS[char] || 0
-      const isPunctuation = extraDelay > 0
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
 
-      // Always type the character with base speed
-      timeoutRef.current = window.setTimeout(() => {
-        setDisplayedText((prev) => prev + char)
-        setCurrentIndex((prev) => prev + 1)
-        setIsDelayed(isPunctuation)
+    const currentIndex = displayedText.length
 
-        // If it's punctuation, add extra delay before next character
-        if (isPunctuation) {
-          timeoutRef.current = window.setTimeout(() => {
-            setIsDelayed(false)
-          }, extraDelay)
+    if (currentIndex < text.length) {
+      // ✅ Check the LAST TYPED character for punctuation delay
+      const lastTypedChar = currentIndex > 0 ? text[currentIndex - 1] : ''
+      const punctuationDelay = TYPING_DELAYS[lastTypedChar] || 0
+      const hasPunctuationDelay = punctuationDelay > 0
+
+      // ✅ Set delayed state immediately for audio feedback during the pause
+      if (hasPunctuationDelay) {
+        setIsDelayed(true)
+      }
+
+      // ✅ Apply punctuation delay to the NEXT character's timing
+      const totalDelay = TYPING_SPEED + punctuationDelay
+
+      timeoutRef.current = setTimeout(() => {
+        setDisplayedText(text.slice(0, currentIndex + 1))
+
+        // Clear delayed state after the pause is over
+        if (hasPunctuationDelay) {
+          setIsDelayed(false)
         }
-      }, TYPING_SPEED)
-    } else if (isTyping && currentIndex >= text.length) {
-      setIsTyping(false)
+      }, totalDelay)
+    } else {
+      // Finished typing current text
       setIsDelayed(false)
-      onComplete?.()
     }
 
     return () => {
@@ -122,19 +132,37 @@ export const useTyping = (text: string, onComplete?: () => void) => {
         clearTimeout(timeoutRef.current)
       }
     }
-  }, [currentIndex, text, isTyping, onComplete])
+  }, [displayedText, text])
 
-  const stopTyping = () => {
-    setIsTyping(false)
-    setCurrentIndex(0)
-    setDisplayedText('')
-    setIsDelayed(false)
+  // Completion callback
+  useEffect(() => {
+    const isDone = text.length > 0 && displayedText === text
+
+    if (isDone && isStreamComplete && !onCompleteCalledRef.current) {
+      onCompleteCalledRef.current = true
+      onComplete?.()
+    }
+
+    if (displayedText.length < text.length) {
+      onCompleteCalledRef.current = false
+    }
+  }, [displayedText, text, isStreamComplete, onComplete])
+
+  const reset = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
-  }
+    setDisplayedText('')
+    setIsDelayed(false)
+    onCompleteCalledRef.current = false
+  }, [])
 
-  return { displayedText, isTyping, currentIndex, stopTyping, isDelayed }
+  return {
+    displayedText,
+    isTyping,
+    isDelayed,
+    reset,
+  }
 }
 
 export const useKeySound = () => {

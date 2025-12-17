@@ -44,9 +44,8 @@ export const sendChatMessage = async (
 
   try {
     const response = await puter.ai.chat(messages, {
-      model: 'claude-sonnet-4',
+      model: 'gpt-5-nano',
       stream: !!onChunk,
-      temperature: 1, // Default temperature for this model
     })
 
     let fullMessage = ''
