@@ -3,7 +3,6 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig } from 'vite'
-import pkg from './package.json'
 
 export default defineConfig({
   plugins: [
@@ -14,7 +13,7 @@ export default defineConfig({
       dts: 'src/auto-imports.d.ts',
     }),
   ],
-  base: `/${pkg.name}/`,
+  base: '/npc-ai/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
