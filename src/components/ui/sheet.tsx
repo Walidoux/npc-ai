@@ -10,28 +10,9 @@ import {
   Trigger,
 } from '@radix-ui/react-dialog'
 import { cn } from '@/utils'
-import { useSFX } from '@/utils/hooks'
 
 function Sheet({ onOpenChange, ...props }: React.ComponentProps<typeof Root>) {
-  const { audioRef, play } = useSFX()
-
-  const handleOpenChange = (open: boolean) => {
-    if (open) {
-      play()
-    }
-    if (onOpenChange) {
-      onOpenChange(open)
-    }
-  }
-
-  return (
-    <>
-      <Root data-slot='sheet' onOpenChange={handleOpenChange} {...props} />
-      <audio preload='auto' ref={audioRef} src='/sfx/wosh.mp3'>
-        <track kind='captions' />
-      </audio>
-    </>
-  )
+  return <Root data-slot='sheet' onOpenChange={onOpenChange} {...props} />
 }
 
 function SheetTrigger({ ...props }: React.ComponentProps<typeof Trigger>) {

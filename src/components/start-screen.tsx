@@ -47,6 +47,8 @@ export const StartScreen = ({
     buttonContent = 'Sign In & Start'
   }
 
+  console.log(import.meta.env.BASE_URL)
+
   return (
     <>
       <div className='flex min-h-screen items-center justify-center bg-gray-900 p-8'>
@@ -69,7 +71,10 @@ export const StartScreen = ({
           setEnableTypingSound={setEnableTypingSound}
         />
       </div>
-      <audio preload='auto' ref={bgAudioRef} src='/background.mp3'>
+      <audio
+        preload='auto'
+        ref={bgAudioRef}
+        src={`${import.meta.env.BASE_URL}/background.mp3`}>
         <track kind='captions' />
       </audio>
     </>

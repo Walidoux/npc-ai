@@ -65,7 +65,6 @@ const parseFrontmatter = (content: string): NPCPersonality => {
 export const npcPersonalities: Record<string, NPCPersonality> = {}
 
 for (const [path, content] of Object.entries(npcMarkdowns)) {
-  console.log(path, content)
   const npcName = path.split('/')[4] // Extract npc_1, npc_2, etc.
   npcPersonalities[npcName] = parseFrontmatter(content)
 }
