@@ -3,7 +3,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 import { cn } from '@/utils'
 
 export const buttonVariants = tv({
-  base: 'flex cursor-pointer items-center rounded font-head font-medium outline-hidden transition-all duration-200',
+  base: 'flex cursor-pointer select-none items-center rounded font-head font-medium outline-hidden transition-all duration-200',
 
   variants: {
     variant: {

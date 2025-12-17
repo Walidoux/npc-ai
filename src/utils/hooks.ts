@@ -46,6 +46,15 @@ export const useAudioSamples = () => {
   return { startListening, stopListening, isListening, audioBlob }
 }
 
+const TYPING_DELAYS: Record<string, number> = {
+  '!': 500,
+  '.': 300,
+  ',': 200,
+  '?': 400,
+  ':': 200,
+  ';': 200,
+}
+
 export const useTyping = (text: string, onComplete?: () => void) => {
   const [displayedText, setDisplayedText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -53,27 +62,40 @@ export const useTyping = (text: string, onComplete?: () => void) => {
   const [isDelayed, setIsDelayed] = useState(false)
   const timeoutRef = useRef<number>(null)
 
-  const delays: Record<string, number> = {
-    '!': 500,
-    '.': 300,
-    ',': 200,
-    '?': 400,
-    ':': 200,
-    ';': 200,
-  }
-
   useEffect(() => {
-    if (text && !isTyping) {
+    if (!text) {
+      // Reset when text is empty
+      setIsTyping(false)
+      setCurrentIndex(0)
+      setDisplayedText('')
+      setIsDelayed(false)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+      return
+    }
+
+    // Check if text changed significantly
+    const textChanged = !text.startsWith(displayedText)
+    if (textChanged) {
+      // Restart typing
       setIsTyping(true)
       setCurrentIndex(0)
       setDisplayedText('')
+      setIsDelayed(false)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    } else if (!isTyping && currentIndex < text.length) {
+      // Continue typing
+      setIsTyping(true)
     }
-  }, [text, isTyping])
+  }, [text, displayedText, isTyping, currentIndex])
 
   useEffect(() => {
     if (isTyping && currentIndex < text.length) {
       const char = text[currentIndex]
-      const delay = delays[char] || TYPING_SPEED
+      const delay = TYPING_DELAYS[char] || TYPING_SPEED
       if (delay > TYPING_SPEED) {
         setIsDelayed(true)
       }

@@ -181,7 +181,7 @@ export const Dialogue = () => {
         <Button
           disabled={!userMessage.trim() || isTypingResponse}
           onClick={handleSendMessage}>
-          {isTypingResponse ? '...' : 'Send'}
+          {isTypingResponse ? '...' : 'SEND'}
         </Button>
       </div>
 

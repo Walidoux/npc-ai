@@ -11,12 +11,12 @@
 @layer utilities {
   .arrow-down::after {
     position: absolute;
-    bottom: -8px;
-    left: 21px;
+    bottom: -7px;
+    left: 30px;
     width: 0;
     height: 0;
     content: '';
-    border-top: 7px solid #fff;
+    border-top: 7px solid var(--color-foreground);
     border-right: 7px solid transparent;
     border-left: 7px solid transparent;
   }
