@@ -12,10 +12,18 @@ declare global {
   const cache: typeof import('react').cache
   const cacheSignal: typeof import('react').cacheSignal
   const createContext: typeof import('react').createContext
+  const createPortal: typeof import('react-dom').createPortal
   const createRef: typeof import('react').createRef
+  const flushSync: typeof import('react-dom').flushSync
   const forwardRef: typeof import('react').forwardRef
   const lazy: typeof import('react').lazy
   const memo: typeof import('react').memo
+  const preconnect: typeof import('react-dom').preconnect
+  const prefetchDNS: typeof import('react-dom').prefetchDNS
+  const preinit: typeof import('react-dom').preinit
+  const preinitModule: typeof import('react-dom').preinitModule
+  const preload: typeof import('react-dom').preload
+  const preloadModule: typeof import('react-dom').preloadModule
   const startTransition: typeof import('react').startTransition
   const use: typeof import('react').use
   const useActionState: typeof import('react').useActionState
@@ -25,6 +33,7 @@ declare global {
   const useDeferredValue: typeof import('react').useDeferredValue
   const useEffect: typeof import('react').useEffect
   const useEffectEvent: typeof import('react').useEffectEvent
+  const useFormStatus: typeof import('react-dom').useFormStatus
   const useId: typeof import('react').useId
   const useImperativeHandle: typeof import('react').useImperativeHandle
   const useInsertionEffect: typeof import('react').useInsertionEffect

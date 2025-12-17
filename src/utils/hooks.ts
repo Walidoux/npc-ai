@@ -57,7 +57,7 @@ export const useTyping = (text: string, onComplete?: () => void) => {
     ',': 200,
     '?': 400,
     ':': 200,
-    ';': 200,
+    ';': 200
   }
 
   useEffect(() => {
@@ -134,9 +134,7 @@ export const useKeySound = () => {
 
 const isInputFocused = (): boolean => {
   const active = document.activeElement
-  return (
-    active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement
-  )
+  return active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement
 }
 
 const getSoundType = (key: string): string => {
