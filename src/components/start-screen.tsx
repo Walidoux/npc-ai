@@ -52,6 +52,7 @@ export const StartScreen = ({
       toast('We do not use cookies', {
         description: 'AI feature is completely free of use',
         classNames: { content: 'mr-8' },
+        duration: Number.POSITIVE_INFINITY,
         cancel: {
           label: 'OK !',
           onClick() {

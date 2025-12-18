@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { onlineManager } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import {
   CharacterPortrait,
   DialogueBox,
@@ -55,6 +56,14 @@ export const Dialogue = () => {
   const [started, setStarted] = useState(false)
   const [currentResponse, setCurrentResponse] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // You can subscribe to the global state
+  onlineManager.subscribe((isOnline) => {
+    console.log(isOnline)
+    if (!isOnline) {
+      toast.error('Offline')
+    }
+  })
 
   useKeySound()
   const {
@@ -133,7 +142,6 @@ export const Dialogue = () => {
 
   const handleNpcChange = (npcName: string) => {
     setSelectedNpc(npcName)
-    // Focus input when switching NPCs
     setTimeout(() => inputRef.current?.focus(), 100)
   }
 
@@ -160,16 +168,15 @@ export const Dialogue = () => {
         aria-label='character-dialogue'
         className='relative mb-4 flex items-end gap-4'>
         <CharacterPortrait />
-        {(isTypingResponse || currentResponse) && (
+        {Boolean(isTypingResponse || currentResponse) && (
           <TalkingBox
             enabled={enableTypingSound}
             isStreamComplete={!isTypingResponse}
-            text={currentResponse} // ✅ Pass streaming state
+            text={currentResponse}
           />
         )}
       </section>
 
-      {/* Input */}
       <div className='flex gap-2'>
         <Input
           autoFocus
@@ -188,7 +195,6 @@ export const Dialogue = () => {
         </Button>
       </div>
 
-      {/* History and Settings */}
       <div className='fixed top-4 right-4 flex gap-2'>
         <HistoryDialog
           currentHistory={currentHistory}

@@ -9,8 +9,8 @@ import { Dialogue } from './talking-box.tsx'
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
-      <Dialogue />
       <Toaster />
+      <Dialogue />
     </ThemeProvider>
   </StrictMode>,
 )

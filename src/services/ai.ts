@@ -50,10 +50,15 @@ export const sendChatMessage = async (
   ] satisfies ChatMessage[]
 
   try {
-    const response = await puter.ai.chat(messages, {
-      model: 'gpt-4o-mini',
-      stream: !!onChunk,
-    })
+    const testMode = import.meta.env.DEV
+    const response = await puter.ai.chat(
+      messages,
+      {
+        model: 'gpt-4o-mini',
+        stream: !!onChunk,
+      },
+      testMode,
+    )
 
     let fullMessage = ''
     const newMessage: Message = {
@@ -118,7 +123,6 @@ export const isAuthenticated = async (): Promise<boolean> => {
   }
 }
 
-// Authenticate with Puter
 export const authenticate = async (): Promise<void> => {
   await puter.auth.signIn()
 }
