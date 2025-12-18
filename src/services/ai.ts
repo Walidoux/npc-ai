@@ -51,7 +51,7 @@ export const sendChatMessage = async (
 
   try {
     const response = await puter.ai.chat(messages, {
-      model: 'gpt-5-nano',
+      model: 'gpt-4o-mini',
       stream: !!onChunk,
     })
 
