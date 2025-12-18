@@ -1,5 +1,15 @@
 import type { NPCPersonality } from '../utils/npcs'
 import puter, { type ChatMessage } from '@heyputer/puter.js'
+import systemPromptTemplate from '../assets/npcs/system-prompt.md?raw'
+
+const interpolateTemplate = (
+  template: string,
+  values: Record<string, string>,
+) =>
+  Object.entries(values).reduce(
+    (acc, [key, value]) => acc.replace(`{${key}}`, value),
+    template,
+  )
 
 export type Message = {
   role: 'system' | 'user' | 'assistant'
@@ -13,21 +23,18 @@ export type ChatResponse = {
 }
 
 // Generate system prompt from NPC personality
-export const createSystemPrompt = (personality: NPCPersonality): string => {
-  const {
+export const createSystemPrompt = ({
+  name,
+  personality,
+  traits,
+  description,
+}: NPCPersonality): string =>
+  interpolateTemplate(systemPromptTemplate, {
     name,
-    personality: personalityType,
-    traits,
+    personality,
+    traits: traits.length > 0 ? traits.join(', ') : '',
     description,
-  } = personality
-
-  return `You are ${name}, a character with the following personality: ${personalityType}.
-${traits.length > 0 ? `Your key traits are: ${traits.join(', ')}.` : ''}
-${description}
-
-Respond in character, staying true to your personality and traits. Keep responses conversational and natural.
-Do not break character or mention that you are an AI. Respond as if you are really ${name}.`
-}
+  })
 
 // Send chat message and get AI response
 export const sendChatMessage = async (
@@ -57,7 +64,7 @@ export const sendChatMessage = async (
 
     if (onChunk) {
       // Handle streaming response
-      for await (const chunk of response as AsyncIterable<{ text?: string }>) {
+      for await (const chunk of response) {
         if (chunk?.text) {
           fullMessage += chunk.text
           newMessage.content = fullMessage
@@ -102,7 +109,6 @@ export const sendChatMessage = async (
   }
 }
 
-// Check if Puter is authenticated
 export const isAuthenticated = async (): Promise<boolean> => {
   try {
     const user = await puter.auth.getUser()

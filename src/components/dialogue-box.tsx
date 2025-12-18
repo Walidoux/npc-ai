@@ -1,9 +1,11 @@
+import ReactMarkdown from 'react-markdown'
+
 type DialogueBoxProps = {
   displayedText: string
   isTyping: boolean
 }
 
-export const DialogueBox = ({ displayedText, isTyping }: DialogueBoxProps) => {
+export const DialogueBox = ({ displayedText }: DialogueBoxProps) => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -13,14 +15,29 @@ export const DialogueBox = ({ displayedText, isTyping }: DialogueBoxProps) => {
   }, [displayedText])
 
   return (
-    <div className='arrow-down absolute bottom-46 left-8 max-h-[200px] w-80 border'>
+    <div className='arrow-down absolute bottom-46 left-8 max-h-[200px] w-80 border py-3'>
       <div
-        className='sidebar-scroll max-h-[calc(200px-24px)] overflow-y-auto px-4 py-2 pr-3'
+        className='sidebar-scroll max-h-[calc(200px-32px)] overflow-y-auto px-4 pr-3'
         ref={scrollRef}>
-        <p className='select-none text-xl leading-5 tracking-wide'>
-          {displayedText}
-          {Boolean(isTyping) && <span className='animate-pulse'>|</span>}
-        </p>
+        <div className='select-none text-xl leading-5 tracking-wide'>
+          <ReactMarkdown
+            components={{
+              code: ({ node, ...props }) => (
+                <code
+                  className='bg-foreground px-1 py-0.5 font-head text-xs'
+                  {...props}
+                />
+              ),
+              pre: ({ node, ...props }) => (
+                <pre
+                  className='my-2 overflow-x-auto bg-slate-100 p-2 font-head text-xs'
+                  {...props}
+                />
+              ),
+            }}>
+            {displayedText}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   )
