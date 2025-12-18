@@ -1,5 +1,3 @@
-import { onlineManager } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import {
   CharacterPortrait,
   DialogueBox,
@@ -56,14 +54,6 @@ export const Dialogue = () => {
   const [started, setStarted] = useState(false)
   const [currentResponse, setCurrentResponse] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
-
-  // You can subscribe to the global state
-  onlineManager.subscribe((isOnline) => {
-    console.log(isOnline)
-    if (!isOnline) {
-      toast.error('Offline')
-    }
-  })
 
   useKeySound()
   const {

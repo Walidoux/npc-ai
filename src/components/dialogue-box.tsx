@@ -26,6 +26,7 @@ export const DialogueBox = ({ displayedText }: DialogueBoxProps) => {
         <div className='select-none text-xl leading-5 tracking-wide'>
           <ReactMarkdown
             components={{
+              hr: ({ node, ...props }) => <hr className='my-3' {...props} />,
               code: ({ node, ...props }) => (
                 <code
                   className='my-2 overflow-x-auto bg-slate-100 p-2 font-head text-xs'
