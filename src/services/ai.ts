@@ -6,6 +6,21 @@ import puter, {
 } from '@heyputer/puter.js'
 import systemPromptTemplate from '../assets/npcs/system-prompt.md?raw'
 
+type SearchResult = {
+  title: string
+  link: string
+  snippet: string
+}
+
+type ToolCall = {
+  id: string
+  function: { name: string; arguments: string }
+}
+
+type ChatResponse = {
+  message?: ChatMessage & { tool_calls?: ToolCall[] }
+}
+
 const weatherTool: ChatOptions['tools'] = {
   type: 'function',
   function: {
@@ -25,6 +40,70 @@ const weatherTool: ChatOptions['tools'] = {
   },
 }
 
+const webSearchTool: ChatOptions['tools'] = {
+  type: 'function',
+  function: {
+    strict: true,
+    name: 'web_search',
+    description:
+      'Search the internet for current news, historical events, or specific information.',
+    parameters: {
+      type: 'object',
+      required: ['query'],
+      properties: {
+        query: {
+          type: 'string',
+          description:
+            'The search query, e.g. "latest news Casablanca" or "history of the Eiffel Tower"',
+        },
+      },
+    },
+  },
+}
+
+const tools = [weatherTool, webSearchTool]
+
+const parseSearchResults = (html: string): SearchResult[] => {
+  const doc = new DOMParser().parseFromString(html, 'text/html')
+  const results: SearchResult[] = []
+
+  for (const element of doc.querySelectorAll('.result')) {
+    const titleEl = element.querySelector('.result__a')
+    const snippetEl = element.querySelector('.result__snippet')
+    if (titleEl && snippetEl) {
+      results.push({
+        title: titleEl.textContent?.trim() || '',
+        link: (titleEl as HTMLAnchorElement).href,
+        snippet: snippetEl.textContent?.trim() || '',
+      })
+    }
+  }
+
+  return results
+}
+
+const performWebSearch = async (query: string): Promise<string> => {
+  try {
+    const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`
+    const response = await puter.net.fetch(url, {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      },
+    })
+
+    const htmlText = await response.text()
+    const results = parseSearchResults(htmlText).slice(0, 5)
+
+    return results.length > 0
+      ? JSON.stringify(results)
+      : `No results found for "${query}".`
+  } catch (error) {
+    console.error('Web search error:', error)
+    return `Failed to perform web search for "${query}"`
+  }
+}
+
 const getWeather = async (location: string): Promise<string> => {
   try {
     const url = `https://wttr.in/${encodeURIComponent(location)}?format=j1`
@@ -38,13 +117,59 @@ const getWeather = async (location: string): Promise<string> => {
   }
 }
 
-/**
- * Generate a system prompt from an NPC personality.
- * The system prompt is a template that includes details about the NPC's name,
- * personality, traits, and description.
- * @param {NPCPersonality} personality The NPC's personality.
- * @returns {string} The generated system prompt.
- */
+const executeTool = async (
+  name: string,
+  args: Record<string, string>,
+): Promise<string> => {
+  switch (name) {
+    case 'get_weather':
+      return await getWeather(args.location)
+    case 'web_search':
+      return await performWebSearch(args.query)
+    default:
+      return `Unknown tool: ${name}`
+  }
+}
+
+const processToolCalls = async (
+  toolCalls: ToolCall[],
+): Promise<ToolMessage[]> =>
+  Promise.all(
+    toolCalls.map(async (toolCall) => ({
+      role: 'tool' as const,
+      tool_call_id: toolCall.id,
+      content: await executeTool(
+        toolCall.function.name,
+        JSON.parse(toolCall.function.arguments),
+      ),
+    })),
+  )
+
+const streamResponse = async (
+  response: AsyncIterable<{ text?: string }>,
+  onChunk: (chunk: string) => void,
+): Promise<string> => {
+  let fullMessage = ''
+  for await (const chunk of response) {
+    if (chunk?.text) {
+      fullMessage += chunk.text
+      onChunk(chunk.text)
+    }
+  }
+  return fullMessage
+}
+
+const buildMessages = (
+  message: string,
+  personality: NPCPersonality,
+  conversationHistory: ChatMessage[],
+): ChatMessage[] => [
+  { role: 'system', content: createSystemPrompt(personality) },
+  ...conversationHistory.slice(-10),
+  { role: 'user', content: message },
+]
+
+/** Generate a system prompt from an NPC personality. */
 export const createSystemPrompt = ({
   name,
   personality,
@@ -61,120 +186,48 @@ export const createSystemPrompt = ({
     systemPromptTemplate,
   )
 
-// Send chat message and get AI response
 export const sendChatMessage = async (
   message: string,
   personality: NPCPersonality,
   conversationHistory: ChatMessage[] = [],
   onChunk?: (chunk: string) => void,
 ): Promise<string> => {
-  const messages: ChatMessage[] = [
-    { role: 'system', content: createSystemPrompt(personality) },
-    ...conversationHistory.slice(-10), // Keep last 10 messages for context
-    { role: 'user', content: message },
-  ]
+  const messages = buildMessages(message, personality, conversationHistory)
+  const testMode = import.meta.env.DEV
 
   try {
-    const tools = [weatherTool]
-    const useStream = !tools.length && !!onChunk
-    const testMode = import.meta.env.DEV
-    const response = await puter.ai.chat(
+    const response = (await puter.ai.chat(
       messages,
-      {
-        model: 'gpt-4o-mini',
-        stream: useStream,
-        ...(tools.length ? { tools } : {}),
-      },
+      { model: 'gpt-4o-mini', stream: false, tools },
+      testMode,
+    )) as ChatResponse
+
+    if (!response.message?.tool_calls?.length) {
+      const content = response.message?.content || String(response)
+      onChunk?.(content)
+      return content
+    }
+
+    const toolMessages = await processToolCalls(response.message.tool_calls)
+    const finalMessages = [...messages, response.message, ...toolMessages]
+
+    const finalResponse = await puter.ai.chat(
+      finalMessages,
+      { model: 'gpt-4o-mini', stream: !!onChunk },
       testMode,
     )
 
-    let fullMessage = ''
-    const newMessage: ChatMessage = {
-      role: 'assistant',
-      content: '',
-      timestamp: Date.now(),
+    if (onChunk) {
+      return streamResponse(
+        finalResponse as AsyncIterable<{ text?: string }>,
+        onChunk,
+      )
     }
 
-    if (useStream) {
-      // Handle streaming response (no tools)
-      for await (const chunk of response) {
-        if (chunk?.text) {
-          fullMessage += chunk.text
-          newMessage.content = fullMessage
-          onChunk(chunk.text)
-        }
-      }
-    } else {
-      // Handle non-streaming response (with tools or no chunk callback)
-      const chatResponse = response as { message?: Omit<ChatMessage, 'role'> }
-
-      if (chatResponse.message?.tool_calls?.length) {
-        // Handle tool calls
-        const toolMessages: ToolMessage[] = []
-        for (const toolCall of chatResponse.message.tool_calls) {
-          if (toolCall.function.name === 'get_weather') {
-            const args = JSON.parse(toolCall.function.arguments)
-            const weatherData = await getWeather(args.location)
-            toolMessages.push({
-              role: 'tool',
-              tool_call_id: toolCall.id,
-              content: weatherData,
-            })
-          }
-        }
-
-        // Call AI again with tool results
-        const finalMessages = [
-          ...messages,
-          chatResponse.message,
-          ...toolMessages,
-        ]
-        const finalResponse = await puter.ai.chat(
-          finalMessages,
-          { model: 'gpt-4o-mini', stream: !!onChunk },
-          testMode,
-        )
-
-        if (onChunk) {
-          // Stream the final response
-          for await (const chunk of finalResponse) {
-            if (chunk?.text) {
-              fullMessage += chunk.text
-              newMessage.content = fullMessage
-              onChunk(chunk.text)
-            }
-          }
-        } else {
-          // Non-streaming final response
-          const finalChatResponse = finalResponse as {
-            message?: { content?: string }
-          }
-          fullMessage =
-            finalChatResponse.message?.content || String(finalResponse)
-          newMessage.content = fullMessage
-        }
-      } else {
-        // No tools called
-        fullMessage = chatResponse.message?.content || String(response)
-        newMessage.content = fullMessage
-        if (onChunk) {
-          // Emit the whole message as chunk
-          onChunk(fullMessage)
-        }
-      }
-    }
-
-    return fullMessage
+    const finalChatResponse = finalResponse as ChatResponse
+    return finalChatResponse.message?.content || String(finalResponse)
   } catch (error) {
     console.error('AI chat error:', error)
-
-    // Return fallback response
-    const fallbackMessage: ChatMessage = {
-      role: 'assistant',
-      content: `I'm sorry, I couldn't process that right now. Let's try again later!`,
-      timestamp: Date.now(),
-    }
-
-    return fallbackMessage.content
+    return "I'm sorry, I couldn't process that right now."
   }
 }
