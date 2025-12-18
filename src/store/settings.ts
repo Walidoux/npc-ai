@@ -1,4 +1,4 @@
-import type { Message } from '../services/ai'
+import type { ChatMessage } from '@heyputer/puter.js'
 import { create } from 'zustand'
 
 type SettingsState = {
@@ -6,8 +6,8 @@ type SettingsState = {
   setSelectedNpc: (npc: string) => void
   enableTypingSound: boolean
   setEnableTypingSound: (enabled: boolean) => void
-  conversationHistory: Record<string, Message[]>
-  addMessage: (npc: string, message: Message) => void
+  conversationHistory: Record<string, ChatMessage[]>
+  addMessage: (npc: string, message: ChatMessage) => void
   clearConversation: (npc: string) => void
   isAuthenticated: boolean
   setIsAuthenticated: (authenticated: boolean) => void

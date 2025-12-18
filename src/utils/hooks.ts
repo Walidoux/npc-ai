@@ -1,4 +1,4 @@
-import { authenticate, isAuthenticated } from '../services/ai'
+import puter from '@heyputer/puter.js'
 import { useSettings } from '../store/settings'
 import { getSample } from '.'
 
@@ -236,6 +236,19 @@ export const useSFX = () => {
   }
 
   return { audioRef, play }
+}
+
+const isAuthenticated = async (): Promise<boolean> => {
+  try {
+    const user = await puter.auth.getUser()
+    return !!user
+  } catch {
+    return false
+  }
+}
+
+const authenticate = async (): Promise<void> => {
+  await puter.auth.signIn()
 }
 
 export const useAuth = () => {

@@ -1,3 +1,4 @@
+import type { ChatMessage } from '@heyputer/puter.js'
 import {
   CharacterPortrait,
   DialogueBox,
@@ -7,7 +8,7 @@ import {
   TypingAudio,
 } from './components'
 import { Button, Input } from './components/ui'
-import { type Message, sendChatMessage } from './services/ai'
+import { sendChatMessage } from './services/ai'
 import { useSettings } from './store/settings'
 import { getSample } from './utils'
 import {
@@ -76,7 +77,7 @@ export const Dialogue = () => {
       setIsTypingResponse(true)
       setCurrentResponse('')
 
-      const userMessageObj: Message = {
+      const userMessageObj: ChatMessage = {
         role: 'user',
         content: message,
         timestamp: Date.now(),
@@ -91,7 +92,7 @@ export const Dialogue = () => {
 
         let _responseText = ''
 
-        const response = await sendChatMessage(
+        const content = await sendChatMessage(
           message,
           personality,
           history,
@@ -102,16 +103,16 @@ export const Dialogue = () => {
           },
         )
 
-        const assistantMessage: Message = {
+        const assistantMessage: ChatMessage = {
           role: 'assistant',
-          content: response.message,
+          content,
           timestamp: Date.now(),
         }
 
         addMessage(selectedNpc, assistantMessage)
       } catch (error) {
         console.error('Failed to send message:', error)
-        const errorMessage: Message = {
+        const errorMessage: ChatMessage = {
           role: 'assistant',
           content: 'Sorry, I encountered an error. Please try again.',
           timestamp: Date.now(),

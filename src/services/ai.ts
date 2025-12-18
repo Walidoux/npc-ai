@@ -6,24 +6,24 @@ import puter, {
 } from '@heyputer/puter.js'
 import systemPromptTemplate from '../assets/npcs/system-prompt.md?raw'
 
-const weatherTool = {
+const weatherTool: ChatOptions['tools'] = {
   type: 'function',
   function: {
+    strict: true,
     name: 'get_weather',
     description: 'Get current weather for a given location',
     parameters: {
       type: 'object',
+      required: ['location'],
       properties: {
         location: {
           type: 'string',
           description: 'City name or location, e.g. Paris, London, Casablanca',
         },
       },
-      required: ['location'],
     },
-    strict: true,
   },
-} satisfies ChatOptions['tools']
+}
 
 const getWeather = async (location: string): Promise<string> => {
   try {
@@ -31,61 +31,48 @@ const getWeather = async (location: string): Promise<string> => {
     const response = await puter.net.fetch(url)
     const data = await response.json()
     const current = data.current_condition[0]
-    const temp = current.temp_C
-    const desc = current.weatherDesc[0].value
-    return `${location}: ${desc}, ${temp}°C`
+    return `${location}: ${current.weatherDesc[0].value}, ${current.temp_C}°C`
   } catch (error) {
     console.error('Weather fetch error:', error)
     return `Unable to fetch weather for ${location}`
   }
 }
 
-const interpolateTemplate = (
-  template: string,
-  values: Record<string, string>,
-) =>
-  Object.entries(values).reduce(
-    (acc, [key, value]) => acc.replace(`{${key}}`, value),
-    template,
-  )
-
-export type Message = {
-  role: 'system' | 'user' | 'assistant'
-  content: string
-  timestamp?: number
-}
-
-export type ChatResponse = {
-  message: string
-  fullResponse: Message[]
-}
-
-// Generate system prompt from NPC personality
+/**
+ * Generate a system prompt from an NPC personality.
+ * The system prompt is a template that includes details about the NPC's name,
+ * personality, traits, and description.
+ * @param {NPCPersonality} personality The NPC's personality.
+ * @returns {string} The generated system prompt.
+ */
 export const createSystemPrompt = ({
   name,
   personality,
   traits,
   description,
 }: NPCPersonality): string =>
-  interpolateTemplate(systemPromptTemplate, {
+  Object.entries({
     name,
     personality,
     traits: traits.length > 0 ? traits.join(', ') : '',
     description,
-  })
+  }).reduce(
+    (acc, [key, value]): string => acc.replace(`{${key}}`, value),
+    systemPromptTemplate,
+  )
 
 // Send chat message and get AI response
 export const sendChatMessage = async (
   message: string,
   personality: NPCPersonality,
-  conversationHistory: Message[] = [],
+  conversationHistory: ChatMessage[] = [],
   onChunk?: (chunk: string) => void,
-): Promise<ChatResponse> => {
-  const messages = [
-    { role: 'system' as const, content: createSystemPrompt(personality) },
+): Promise<string> => {
+  const messages: ChatMessage[] = [
+    { role: 'system', content: createSystemPrompt(personality) },
     ...conversationHistory.slice(-10), // Keep last 10 messages for context
-    { role: 'user' as const, content: message },
-  ] satisfies ChatMessage[]
+    { role: 'user', content: message },
+  ]
 
   try {
     const tools = [weatherTool]
@@ -102,7 +89,7 @@ export const sendChatMessage = async (
     )
 
     let fullMessage = ''
-    const newMessage: Message = {
+    const newMessage: ChatMessage = {
       role: 'assistant',
       content: '',
       timestamp: Date.now(),
@@ -177,46 +164,17 @@ export const sendChatMessage = async (
       }
     }
 
-    const fullResponse: Message[] = [
-      ...conversationHistory,
-      { role: 'user', content: message, timestamp: Date.now() },
-      newMessage,
-    ]
-
-    return {
-      message: fullMessage,
-      fullResponse,
-    }
+    return fullMessage
   } catch (error) {
     console.error('AI chat error:', error)
 
     // Return fallback response
-    const fallbackMessage: Message = {
+    const fallbackMessage: ChatMessage = {
       role: 'assistant',
       content: `I'm sorry, I couldn't process that right now. Let's try again later!`,
       timestamp: Date.now(),
     }
 
-    return {
-      message: fallbackMessage.content,
-      fullResponse: [
-        ...conversationHistory,
-        { role: 'user', content: message, timestamp: Date.now() },
-        fallbackMessage,
-      ],
-    }
+    return fallbackMessage.content
   }
-}
-
-export const isAuthenticated = async (): Promise<boolean> => {
-  try {
-    const user = await puter.auth.getUser()
-    return !!user
-  } catch {
-    return false
-  }
-}
-
-export const authenticate = async (): Promise<void> => {
-  await puter.auth.signIn()
 }

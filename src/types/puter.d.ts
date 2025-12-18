@@ -1,10 +1,10 @@
 import '@heyputer/puter.js'
-import type { ChatMessage } from '@heyputer/puter.js'
+import type { ChatMessage as BaseChatMessage } from '@heyputer/puter.js'
 
 declare module '@heyputer/puter.js' {
   export type ChatOptions = {
     tools: {
-      type: 'function' | 'object'
+      type: 'function'
       function: Record<'name' | 'description', string> & {
         strict: boolean
         parameters: {
@@ -18,5 +18,10 @@ declare module '@heyputer/puter.js' {
 
   export type ToolMessage = Omit<ChatMessage, 'tool_calls'> & {
     tool_call_id: string
+  }
+
+  export type ChatMessage = BaseChatMessage & {
+    role: 'system' | 'user' | 'assistant'
+    timestamp?: number
   }
 }

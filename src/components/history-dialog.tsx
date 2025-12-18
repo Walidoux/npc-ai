@@ -1,11 +1,11 @@
-import type { Message } from '../services/ai'
+import type { ChatMessage } from '@heyputer/puter.js'
 import { NotesMultiple as HistoryIcon } from '@nsmr/pixelart-react'
 import { npcPersonalities } from '../utils/npcs'
 import { Button } from './ui'
 import { Dialog } from './ui/dialog'
 
 type HistoryDialogProps = {
-  currentHistory: Message[]
+  currentHistory: ChatMessage[]
   selectedNpc: string
 }
 
