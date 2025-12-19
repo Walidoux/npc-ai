@@ -20,8 +20,8 @@ export const HistoryDialog = ({
       </Button>
     </Dialog.Trigger>
     <Dialog.Content className='max-h-[80vh]' size='2xl'>
-      <Dialog.Header>
-        <div className='font-bold font-head text-xl'>Conversation History</div>
+      <Dialog.Header className='font-head'>
+        <div className='font-bold text-xl'>Conversation History</div>
         <Dialog.Description>
           Your chat history with{' '}
           {npcPersonalities[selectedNpc]?.name || selectedNpc}

@@ -8,7 +8,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => (
     <input
-      className={`w-full select-none rounded border-2 px-4 py-2 shadow-md transition focus:shadow-xs focus:outline-hidden ${
+      className={`w-full select-none rounded border-2 px-4 py-2 font-head shadow-md transition focus:shadow-xs focus:outline-hidden ${
         props['aria-invalid']
           ? 'border-destructive text-destructive shadow-destructive shadow-xs'
           : ''

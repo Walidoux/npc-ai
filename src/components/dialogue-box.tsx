@@ -23,7 +23,7 @@ export const DialogueBox = ({ displayedText }: DialogueBoxProps) => {
       <div
         className='sidebar-scroll max-h-[calc(200px-32px)] overflow-y-auto px-4 py-3 pr-3'
         ref={scrollRef}>
-        <div className='select-none text-xl leading-5 tracking-wide'>
+        <div className='select-none font-sans text-xl leading-5 tracking-wide'>
           <ReactMarkdown
             components={{
               a: ({ node, ...props }) => (
@@ -37,13 +37,13 @@ export const DialogueBox = ({ displayedText }: DialogueBoxProps) => {
               hr: ({ node, ...props }) => <hr className='my-3' {...props} />,
               code: ({ node, ...props }) => (
                 <code
-                  className='my-2 overflow-x-auto bg-slate-100 p-2 font-head text-xs'
+                  className='my-2 overflow-x-auto bg-slate-100 p-2 text-xs'
                   {...props}
                 />
               ),
               pre: ({ node, ...props }) => (
                 <pre
-                  className='my-2 overflow-x-auto bg-slate-100 p-2 font-head text-xs'
+                  className='my-2 overflow-x-auto bg-slate-100 p-2 text-xs'
                   {...props}
                 />
               ),

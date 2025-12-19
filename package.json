@@ -15,6 +15,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@fontsource/space-grotesk": "^5.2.10",
     "@fontsource/vt323": "^5.2.7",
     "@heyputer/puter.js": "^2.2.2",
     "@nsmr/pixelart-react": "^2.0.0",

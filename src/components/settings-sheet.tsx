@@ -1,5 +1,6 @@
 import { Sliders2 as SettingsIcon } from '@nsmr/pixelart-react'
 import { NpcSelector } from './npc-selector'
+import { Slider } from './retroui/Slider'
 import {
   Button,
   Sheet,
@@ -11,7 +12,6 @@ import {
   SheetTrigger,
   Switch,
 } from './ui'
-import { Slider } from './retroui/Slider'
 
 type SettingsSheetProps = {
   selectedNpc: string
@@ -44,7 +44,7 @@ export const SettingsSheet = ({
         <SettingsIcon />
       </Button>
     </SheetTrigger>
-    <SheetContent>
+    <SheetContent className='font-head'>
       <SheetHeader>
         <SheetTitle>Settings</SheetTitle>
         <SheetDescription>Adjust your preferences here.</SheetDescription>
