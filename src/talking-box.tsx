@@ -14,6 +14,7 @@ import { getSample } from './utils'
 import {
   useAuth,
   useBackgroundAudio,
+  useCarbonFootprint,
   useKeySound,
   useTyping,
 } from './utils/hooks'
@@ -24,6 +25,7 @@ type TalkingBoxProps = {
   onComplete?: () => void
   enabled?: boolean
   isStreamComplete?: boolean
+  typingSoundVolume: number
 }
 
 export const TalkingBox = ({
@@ -31,6 +33,7 @@ export const TalkingBox = ({
   onComplete,
   enabled = true,
   isStreamComplete = true,
+  typingSoundVolume,
 }: TalkingBoxProps) => {
   const { displayedText, isTyping, isDelayed } = useTyping(text, {
     onComplete,
@@ -44,6 +47,7 @@ export const TalkingBox = ({
         enabled={enabled}
         isDelayed={isDelayed}
         isTyping={isTyping}
+        volume={typingSoundVolume}
       />
     </>
   )
@@ -62,6 +66,10 @@ export const Dialogue = () => {
     setSelectedNpc,
     enableTypingSound,
     setEnableTypingSound,
+    typingSoundVolume,
+    setTypingSoundVolume,
+    backgroundMusicVolume,
+    setBackgroundMusicVolume,
     conversationHistory,
     addMessage,
     clearConversation,
@@ -69,6 +77,11 @@ export const Dialogue = () => {
 
   const { authChecked, isAuthenticating, authStatus, handleStart } = useAuth()
   const bgAudioRef = useBackgroundAudio(started)
+  const carbonMetrics = useCarbonFootprint()
+
+  useEffect(() => {
+    console.log('Carbon Footprint Data:', carbonMetrics)
+  }, [carbonMetrics])
 
   const handleSendMessage = async () => {
     if (userMessage.trim() && !isTypingResponse && authStatus) {
@@ -143,12 +156,16 @@ export const Dialogue = () => {
       <StartScreen
         authChecked={authChecked}
         authStatus={authStatus}
+        backgroundMusicVolume={backgroundMusicVolume}
         enableTypingSound={enableTypingSound}
         isAuthenticating={isAuthenticating}
         onNpcChange={handleNpcChange}
         onStart={() => handleStart(setStarted)}
         selectedNpc={selectedNpc}
+        setBackgroundMusicVolume={setBackgroundMusicVolume}
         setEnableTypingSound={setEnableTypingSound}
+        setTypingSoundVolume={setTypingSoundVolume}
+        typingSoundVolume={typingSoundVolume}
       />
     )
   }
@@ -164,6 +181,7 @@ export const Dialogue = () => {
             enabled={enableTypingSound}
             isStreamComplete={!isTypingResponse}
             text={currentResponse}
+            typingSoundVolume={typingSoundVolume}
           />
         )}
       </section>
@@ -192,12 +210,16 @@ export const Dialogue = () => {
           selectedNpc={selectedNpc}
         />
         <SettingsSheet
+          backgroundMusicVolume={backgroundMusicVolume}
           enableTypingSound={enableTypingSound}
           onClearConversation={() => clearConversation(selectedNpc)}
           onNpcChange={handleNpcChange}
           selectedNpc={selectedNpc}
+          setBackgroundMusicVolume={setBackgroundMusicVolume}
           setEnableTypingSound={setEnableTypingSound}
+          setTypingSoundVolume={setTypingSoundVolume}
           showClearConversation={true}
+          typingSoundVolume={typingSoundVolume}
         />
       </div>
       <audio preload='auto' ref={bgAudioRef} src={getSample('background.mp3')}>

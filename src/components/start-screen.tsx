@@ -11,6 +11,10 @@ type StartScreenProps = {
   onNpcChange: (name: string) => void
   enableTypingSound: boolean
   setEnableTypingSound: (value: boolean) => void
+  typingSoundVolume: number
+  setTypingSoundVolume: (value: number) => void
+  backgroundMusicVolume: number
+  setBackgroundMusicVolume: (value: number) => void
 }
 
 export const StartScreen = ({
@@ -22,6 +26,10 @@ export const StartScreen = ({
   onNpcChange,
   enableTypingSound,
   setEnableTypingSound,
+  typingSoundVolume,
+  setTypingSoundVolume,
+  backgroundMusicVolume,
+  setBackgroundMusicVolume,
 }: StartScreenProps) => {
   if (!authChecked) {
     return (
@@ -78,10 +86,14 @@ export const StartScreen = ({
 
       <div className='fixed top-4 right-4 flex gap-2'>
         <SettingsSheet
+          backgroundMusicVolume={backgroundMusicVolume}
           enableTypingSound={enableTypingSound}
           onNpcChange={onNpcChange}
           selectedNpc={selectedNpc}
+          setBackgroundMusicVolume={setBackgroundMusicVolume}
           setEnableTypingSound={setEnableTypingSound}
+          setTypingSoundVolume={setTypingSoundVolume}
+          typingSoundVolume={typingSoundVolume}
         />
       </div>
     </div>

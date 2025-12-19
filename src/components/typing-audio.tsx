@@ -4,12 +4,14 @@ type TypingAudioProps = {
   isTyping: boolean
   isDelayed: boolean
   enabled: boolean
+  volume: number
 }
 
 export const TypingAudio = ({
   isTyping,
   isDelayed,
   enabled,
+  volume,
 }: TypingAudioProps) => {
   const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -17,11 +19,18 @@ export const TypingAudio = ({
     if (isTyping && enabled && audioRef.current) {
       audioRef.current.currentTime = 0
       audioRef.current.loop = true
+      audioRef.current.volume = volume
       audioRef.current.play().catch(() => {
         // Ignore audio play errors
       })
     }
-  }, [isTyping, enabled])
+  }, [isTyping, enabled, volume])
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+    }
+  }, [volume])
 
   // Handle audio looping for first 2 seconds
   useEffect(() => {

@@ -1,4 +1,5 @@
 import puter from '@heyputer/puter.js'
+import { co2 } from '@tgwf/co2'
 import { useSettings } from '../store/settings'
 import { getSample } from '.'
 
@@ -295,11 +296,13 @@ export const useAuth = () => {
 
 export const useBackgroundAudio = (started: boolean) => {
   const bgAudioRef = useRef<HTMLAudioElement>(null)
+  const { backgroundMusicVolume } = useSettings()
 
   useEffect(() => {
     const play = async () => {
       if (started && bgAudioRef.current) {
         bgAudioRef.current.loop = true
+        bgAudioRef.current.volume = backgroundMusicVolume
         try {
           await bgAudioRef.current.play()
         } catch (error) {
@@ -308,7 +311,69 @@ export const useBackgroundAudio = (started: boolean) => {
       }
     }
     play()
-  }, [started])
+  }, [started, backgroundMusicVolume])
+
+  useEffect(() => {
+    if (bgAudioRef.current) {
+      bgAudioRef.current.volume = backgroundMusicVolume
+    }
+  }, [backgroundMusicVolume])
 
   return bgAudioRef
+}
+
+export const useCarbonFootprint = (nb_views = 1000) => {
+  const [stats, setStats] = useState({
+    transferSizeMB: 0,
+    co2Gram_perView: 0, // Fixed typo perVIew -> perView
+    waterLiter_perView: 0,
+  })
+
+  useEffect(() => {
+    // get Byte Size - NOTE: in dev mode, this is often 0 due to caching or CORS
+    const resources = performance.getEntriesByType(
+      'resource',
+    ) as PerformanceResourceTiming[]
+
+    let transferBytes = 0
+    for (const entry of resources) {
+      if (entry.transferSize) {
+        transferBytes += entry.transferSize
+      }
+    }
+
+    const navEntry = performance.getEntriesByType(
+      'navigation',
+    )[0] as PerformanceNavigationTiming
+    if (navEntry?.transferSize) {
+      transferBytes += navEntry.transferSize
+    }
+
+    // avoid NaN if 0 bytes
+    if (transferBytes === 0) {
+      return setStats({
+        transferSizeMB: 0,
+        co2Gram_perView: 0,
+        waterLiter_perView: 0,
+      })
+    }
+
+    // initialize CO2 model based on Sustainable Web Design Model v4
+    const swd = new co2({ model: 'swd', version: 'v4' })
+
+    const emissionsResult = swd.perByte(transferBytes)
+    const waterPerView = (transferBytes / 1024 ** 3) * 0.1
+    const co2PerView =
+      typeof emissionsResult === 'number'
+        ? emissionsResult
+        : emissionsResult.total
+
+    setStats({
+      transferSizeMB: transferBytes / 1024 ** 2,
+      co2Gram_perView: co2PerView * nb_views,
+      waterLiter_perView: waterPerView * nb_views,
+    })
+  }, [nb_views])
+
+  return stats
 }

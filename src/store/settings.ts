@@ -6,6 +6,10 @@ type SettingsState = {
   setSelectedNpc: (npc: string) => void
   enableTypingSound: boolean
   setEnableTypingSound: (enabled: boolean) => void
+  typingSoundVolume: number
+  setTypingSoundVolume: (volume: number) => void
+  backgroundMusicVolume: number
+  setBackgroundMusicVolume: (volume: number) => void
   conversationHistory: Record<string, ChatMessage[]>
   addMessage: (npc: string, message: ChatMessage) => void
   clearConversation: (npc: string) => void
@@ -18,6 +22,10 @@ export const useSettings = create<SettingsState>((set) => ({
   setSelectedNpc: (npc) => set({ selectedNpc: npc }),
   enableTypingSound: true,
   setEnableTypingSound: (enabled) => set({ enableTypingSound: enabled }),
+  typingSoundVolume: 0.5,
+  setTypingSoundVolume: (volume) => set({ typingSoundVolume: volume }),
+  backgroundMusicVolume: 0.5,
+  setBackgroundMusicVolume: (volume) => set({ backgroundMusicVolume: volume }),
   conversationHistory: {},
   addMessage: (npc, message) =>
     set((state) => ({
