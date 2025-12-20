@@ -19,7 +19,7 @@ export const CO2EmissionsPage = ({ onBack }: CO2EmissionsPageProps) => {
   }, [])
 
   return (
-    <div className='flex min-h-screen flex-col items-center justify-center p-8 font-head'>
+    <div className='flex min-h-screen flex-col items-center justify-center p-8 pt-26 font-head'>
       <Button className='fixed top-4 left-4' onClick={onBack} variant='outline'>
         <ArrowLeft className='mr-2' size={18} />
         Back to Chat
@@ -59,11 +59,11 @@ export const CO2EmissionsPage = ({ onBack }: CO2EmissionsPageProps) => {
         <h2 className='mb-4 font-semibold text-xl'>Current Session</h2>
         <div className='grid grid-cols-2 gap-4'>
           <div className='rounded border p-4'>
-            <div className='font-bold text-2xl text-green-600'>{nodeCount}</div>
+            <div className='font-bold text-2xl'>{nodeCount}</div>
             <div className='text-muted-foreground text-sm'>Nodes in DOM</div>
           </div>
           <div className='rounded border p-4'>
-            <div className='font-bold text-2xl text-blue-600'>
+            <div className='font-bold text-2xl'>
               {transferSizeMB.toFixed(2)} MB
             </div>
             <div className='text-muted-foreground text-sm'>Data Transfer</div>

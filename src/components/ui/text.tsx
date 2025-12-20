@@ -24,7 +24,6 @@ interface TextProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'className'>,
     VariantProps<typeof textVariants> {
   className?: string
-  as?: React.ElementType
 }
 
 export const Text = (props: TextProps) => {

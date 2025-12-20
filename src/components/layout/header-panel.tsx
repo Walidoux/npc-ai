@@ -13,7 +13,7 @@ type HeaderPanelProps = {
 }
 
 export const HeaderPanel = ({ onCO2Click }: HeaderPanelProps) => (
-  <div className='fixed top-4 right-4 flex gap-2'>
+  <div className='fixed top-4 right-4 z-50 flex gap-2'>
     <Tooltip.Provider>
       <Tooltip>
         <Tooltip.Trigger asChild>
@@ -64,7 +64,6 @@ export const HeaderPanel = ({ onCO2Click }: HeaderPanelProps) => (
         <Tooltip.Content
           className='inline-flex gap-x-2 font-head'
           variant='solid'>
-          <ExternalLink size={18} />
           CO2 Emission
         </Tooltip.Content>
       </Tooltip>

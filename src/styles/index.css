@@ -1,12 +1,13 @@
 @import '@fontsource/vt323';
 @import '@fontsource/space-grotesk';
 @import 'tailwindcss';
+@import 'tw-animate-css';
 @import './globals.css';
 @import './scrollbar.css';
 
 @layer base {
   body {
-    @apply bg-background;
+    @apply bg-background overflow-y-hidden;
   }
 }
 

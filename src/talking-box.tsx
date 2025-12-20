@@ -156,7 +156,7 @@ export const Dialogue = () => {
         {showCO2Page && (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className='absolute inset-0'
+            className='absolute inset-0 overflow-y-auto'
             exit={{ opacity: 0, y: -20 }}
             initial={{ opacity: 0, y: 20 }}
             key='co2-page'
