@@ -1,9 +1,18 @@
-import { ExternalLink, Github, Heart } from '@nsmr/pixelart-react'
+import {
+  DropHalf as CarbonFootPrintIcon,
+  ExternalLink,
+  Github as SourceCodeIcon,
+  Heart as SupportIcon,
+} from '@nsmr/pixelart-react'
 import packageJson from '@/../package.json'
 import { Button, Tooltip } from '../ui'
 import { SettingsSheet } from './settings-sheet'
 
-export const HeaderPanel = () => (
+type HeaderPanelProps = {
+  onCO2Click?: () => void
+}
+
+export const HeaderPanel = ({ onCO2Click }: HeaderPanelProps) => (
   <div className='fixed top-4 right-4 flex gap-2'>
     <Tooltip.Provider>
       <Tooltip>
@@ -14,7 +23,7 @@ export const HeaderPanel = () => (
             }
             size='icon'
             variant='outline'>
-            <Heart />
+            <SupportIcon />
           </Button>
         </Tooltip.Trigger>
         <Tooltip.Content
@@ -30,10 +39,10 @@ export const HeaderPanel = () => (
       <Tooltip>
         <Tooltip.Trigger asChild>
           <Button
-            onClick={() => window.open(packageJson.homepage, '_blank')}
+            onClick={() => window.open(packageJson.repository.url, '_blank')}
             size='icon'
             variant='outline'>
-            <Github />
+            <SourceCodeIcon />
           </Button>
         </Tooltip.Trigger>
         <Tooltip.Content
@@ -41,6 +50,22 @@ export const HeaderPanel = () => (
           variant='solid'>
           <ExternalLink size={18} />
           Source Code
+        </Tooltip.Content>
+      </Tooltip>
+    </Tooltip.Provider>
+
+    <Tooltip.Provider>
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <Button onClick={onCO2Click} size='icon' variant='outline'>
+            <CarbonFootPrintIcon />
+          </Button>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          className='inline-flex gap-x-2 font-head'
+          variant='solid'>
+          <ExternalLink size={18} />
+          CO2 Emission
         </Tooltip.Content>
       </Tooltip>
     </Tooltip.Provider>

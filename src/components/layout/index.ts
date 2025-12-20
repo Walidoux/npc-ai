@@ -1,5 +1,6 @@
 export * from './audio-controls'
 export * from './character-portrait'
+export * from './co2-emissions-page'
 export * from './dialogue-box'
 export * from './header-panel'
 export * from './history-dialog'
