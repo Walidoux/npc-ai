@@ -29,7 +29,7 @@ At the end of every implementation, if there are any linting problems, execute `
 - **Filenames**: kebab-case for components and files (e.g., dialogue-box.tsx)
 - **Components**: Arrow functions, explicit TypeScript interfaces
 - **Imports**: Relative paths, double quotes (React hooks like `useEffect`, `useState`, `useRef` are auto-imported via unplugin-auto-import)
-- **Styling**: Tailwind CSS with `cn()` utility for class merging
+- **Styling**: Tailwind CSS with `cn()` utility for class merging from tailwind-variants
 - **Error handling**: Try/catch with console.error, proper useEffect cleanup
 - **Naming**: camelCase for variables/functions, PascalCase for components
 - **React**: Functional components, hooks, no default exports for components, no props drilling.

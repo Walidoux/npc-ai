@@ -42,6 +42,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@tgwf/co2": "^0.17.0",
     "framer-motion": "^12.23.26",
+    "lucide-react": "^0.562.0",
     "npm": "^11.7.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

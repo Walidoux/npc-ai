@@ -17,7 +17,7 @@ export const StartScreen = ({
 }: StartScreenProps) => {
   if (!authChecked) {
     return (
-      <div className='flex min-h-screen items-center justify-center p-8'>
+      <div className='flex min-h-screen items-center justify-center p-8 font-head'>
         <Spinner className='mr-2' size='sm' />
         Checking authentication...
       </div>
