@@ -14,7 +14,7 @@ export const HistoryDialog = ({
   selectedNpc,
 }: HistoryDialogProps) => (
   <Dialog>
-    <Dialog.Trigger asChild>
+    <Dialog.Trigger asChild className='fixed top-4 left-4'>
       <Button size='icon' variant='outline'>
         <HistoryIcon />
       </Button>
@@ -23,14 +23,14 @@ export const HistoryDialog = ({
       <Dialog.Header className='font-head'>
         <div className='font-bold text-xl'>Conversation History</div>
         <Dialog.Description>
-          Your chat history with{' '}
-          {npcPersonalities[selectedNpc]?.name || selectedNpc}
+          {'Your chat history with ' +
+            (npcPersonalities[selectedNpc]?.name || selectedNpc)}
         </Dialog.Description>
       </Dialog.Header>
       <div className='max-h-[60vh] overflow-y-auto'>
         <div className='space-y-4'>
           {currentHistory.length === 0 ? (
-            <p className='text-center text-gray-500'>
+            <p className='p-6 text-center text-gray-500'>
               No messages yet. Start a conversation!
             </p>
           ) : (

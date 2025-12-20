@@ -92,6 +92,7 @@
         "noUndeclaredVariables": "off"
       },
       "nursery": {
+        "noLeakedRender": "off",
         "useSortedClasses": {
           "fix": "safe",
           "level": "info",

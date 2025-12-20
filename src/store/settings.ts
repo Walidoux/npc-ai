@@ -4,6 +4,8 @@ import { create } from 'zustand'
 type SettingsState = {
   selectedNpc: string
   setSelectedNpc: (npc: string) => void
+  selectedMusic: string
+  setSelectedMusic: (music: string) => void
   enableTypingSound: boolean
   setEnableTypingSound: (enabled: boolean) => void
   typingSoundVolume: number
@@ -20,6 +22,8 @@ type SettingsState = {
 export const useSettings = create<SettingsState>((set) => ({
   selectedNpc: 'npc_1',
   setSelectedNpc: (npc) => set({ selectedNpc: npc }),
+  selectedMusic: 'music_1',
+  setSelectedMusic: (music) => set({ selectedMusic: music }),
   enableTypingSound: true,
   setEnableTypingSound: (enabled) => set({ enableTypingSound: enabled }),
   typingSoundVolume: 0.5,

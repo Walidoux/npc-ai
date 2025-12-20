@@ -1,6 +1,7 @@
 export * from './button'
 export * from './input'
 export * from './sheet'
+export * from './slider'
 export * from './sonner'
 export * from './spinner'
 export * from './switch'

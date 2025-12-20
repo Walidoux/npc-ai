@@ -21,7 +21,7 @@ export const DialogueBox = ({ displayedText }: DialogueBoxProps) => {
       className='arrow-down absolute bottom-46 left-8 max-h-[200px] w-80 border'
       initial={{ opacity: 0, y: 50 }}>
       <div
-        className='sidebar-scroll max-h-[calc(200px-32px)] overflow-y-auto px-4 py-3 pr-3'
+        className='max-h-[calc(200px-32px)] overflow-y-auto px-4 py-3 pr-3'
         ref={scrollRef}>
         <div className='select-none font-sans text-xl leading-5 tracking-wide'>
           <ReactMarkdown

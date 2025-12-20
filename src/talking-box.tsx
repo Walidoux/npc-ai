@@ -3,14 +3,12 @@ import {
   CharacterPortrait,
   DialogueBox,
   HistoryDialog,
-  SettingsSheet,
   StartScreen,
   TypingAudio,
 } from './components'
 import { Button, Input } from './components/ui'
 import { sendChatMessage } from './services/ai'
 import { useSettings } from './store/settings'
-import { getSample } from './utils'
 import {
   useAuth,
   useBackgroundAudio,
@@ -18,6 +16,7 @@ import {
   useKeySound,
   useTyping,
 } from './utils/hooks'
+import { musicOptions } from './utils/music'
 import { npcPersonalities } from './utils/npcs'
 
 type TalkingBoxProps = {
@@ -63,16 +62,11 @@ export const Dialogue = () => {
   useKeySound()
   const {
     selectedNpc,
-    setSelectedNpc,
+    selectedMusic,
     enableTypingSound,
-    setEnableTypingSound,
     typingSoundVolume,
-    setTypingSoundVolume,
-    backgroundMusicVolume,
-    setBackgroundMusicVolume,
     conversationHistory,
     addMessage,
-    clearConversation,
   } = useSettings()
 
   const { authChecked, isAuthenticating, authStatus, handleStart } = useAuth()
@@ -144,28 +138,13 @@ export const Dialogue = () => {
     }
   }
 
-  const handleNpcChange = (npcName: string) => {
-    setSelectedNpc(npcName)
-    setTimeout(() => inputRef.current?.focus(), 100)
-  }
-
-  const currentHistory = conversationHistory[selectedNpc] || []
-
   if (!started) {
     return (
       <StartScreen
         authChecked={authChecked}
         authStatus={authStatus}
-        backgroundMusicVolume={backgroundMusicVolume}
-        enableTypingSound={enableTypingSound}
         isAuthenticating={isAuthenticating}
-        onNpcChange={handleNpcChange}
         onStart={() => handleStart(setStarted)}
-        selectedNpc={selectedNpc}
-        setBackgroundMusicVolume={setBackgroundMusicVolume}
-        setEnableTypingSound={setEnableTypingSound}
-        setTypingSoundVolume={setTypingSoundVolume}
-        typingSoundVolume={typingSoundVolume}
       />
     )
   }
@@ -176,14 +155,15 @@ export const Dialogue = () => {
         aria-label='character-dialogue'
         className='relative mb-4 flex items-end gap-4'>
         <CharacterPortrait />
-        {Boolean(isTypingResponse || currentResponse) && (
-          <TalkingBox
-            enabled={enableTypingSound}
-            isStreamComplete={!isTypingResponse}
-            text={currentResponse}
-            typingSoundVolume={typingSoundVolume}
-          />
-        )}
+        {isTypingResponse ||
+          (currentResponse && (
+            <TalkingBox
+              enabled={enableTypingSound}
+              isStreamComplete={!isTypingResponse}
+              text={currentResponse}
+              typingSoundVolume={typingSoundVolume}
+            />
+          ))}
       </section>
 
       <div className='flex gap-2'>
@@ -205,25 +185,14 @@ export const Dialogue = () => {
         </Button>
       </div>
 
-      <div className='fixed top-4 right-4 flex gap-2'>
-        <HistoryDialog
-          currentHistory={currentHistory}
-          selectedNpc={selectedNpc}
-        />
-        <SettingsSheet
-          backgroundMusicVolume={backgroundMusicVolume}
-          enableTypingSound={enableTypingSound}
-          onClearConversation={() => clearConversation(selectedNpc)}
-          onNpcChange={handleNpcChange}
-          selectedNpc={selectedNpc}
-          setBackgroundMusicVolume={setBackgroundMusicVolume}
-          setEnableTypingSound={setEnableTypingSound}
-          setTypingSoundVolume={setTypingSoundVolume}
-          showClearConversation={true}
-          typingSoundVolume={typingSoundVolume}
-        />
-      </div>
-      <audio preload='auto' ref={bgAudioRef} src={getSample('background.mp3')}>
+      <HistoryDialog
+        currentHistory={conversationHistory[selectedNpc] || []}
+        selectedNpc={selectedNpc}
+      />
+      <audio
+        preload='auto'
+        ref={bgAudioRef}
+        src={musicOptions[selectedMusic]?.url}>
         <track kind='captions' />
       </audio>
     </main>

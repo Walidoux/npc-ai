@@ -1,5 +1,4 @@
 import { toast } from 'sonner'
-import { SettingsSheet } from './settings-sheet'
 import { Button, Spinner } from './ui'
 
 type StartScreenProps = {
@@ -7,14 +6,6 @@ type StartScreenProps = {
   isAuthenticating: boolean
   authStatus: boolean
   onStart: () => void
-  selectedNpc: string
-  onNpcChange: (name: string) => void
-  enableTypingSound: boolean
-  setEnableTypingSound: (value: boolean) => void
-  typingSoundVolume: number
-  setTypingSoundVolume: (value: number) => void
-  backgroundMusicVolume: number
-  setBackgroundMusicVolume: (value: number) => void
 }
 
 export const StartScreen = ({
@@ -22,14 +13,6 @@ export const StartScreen = ({
   isAuthenticating,
   authStatus,
   onStart,
-  selectedNpc,
-  onNpcChange,
-  enableTypingSound,
-  setEnableTypingSound,
-  typingSoundVolume,
-  setTypingSoundVolume,
-  backgroundMusicVolume,
-  setBackgroundMusicVolume,
 }: StartScreenProps) => {
   if (!authChecked) {
     return (
@@ -82,19 +65,6 @@ export const StartScreen = ({
         <Button disabled={isAuthenticating} onClick={onStart}>
           {buttonContent}
         </Button>
-      </div>
-
-      <div className='fixed top-4 right-4 flex gap-2'>
-        <SettingsSheet
-          backgroundMusicVolume={backgroundMusicVolume}
-          enableTypingSound={enableTypingSound}
-          onNpcChange={onNpcChange}
-          selectedNpc={selectedNpc}
-          setBackgroundMusicVolume={setBackgroundMusicVolume}
-          setEnableTypingSound={setEnableTypingSound}
-          setTypingSoundVolume={setTypingSoundVolume}
-          typingSoundVolume={typingSoundVolume}
-        />
       </div>
     </div>
   )

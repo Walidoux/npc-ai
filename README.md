@@ -1,24 +1,21 @@
 # 🧠 NPC AI
 
-An interactive AI-powered NPC chat application built with React and modern web technologies.
+An interactive AI-powered NPC chat application.
 
 ## ✨ Features
 
-- Multiple NPC characters with unique personalities
+- Multiple NPC characters with unique personalities/traits
 - Real-time dialogue system
 - Customizable settings and audio controls
 - Retro UI design with customizable themes
 
 ## 🧭 Roadmap
 
-- [ ] Add more diverse NPC characters with different backgrounds and personalities
+- [ ] ~~Add more diverse NPC characters with different backgrounds and personalities~~
 - [ ] Enhance AI conversation quality with better context awareness
-- [ ] Implement text-to-speech for NPC responses
 - [ ] Add conversation history saving and loading
 - [ ] Introduce branching dialogue trees
-- [ ] Add user avatar customization
 - [ ] Implement multiplayer co-op mode
-- [ ] Add achievements and progression system
 - [ ] Support for custom NPC creation by users
 - [ ] Integrate with external AI models for more variety
 
@@ -27,13 +24,12 @@ An interactive AI-powered NPC chat application built with React and modern web t
 - React 18 with TypeScript
 - Vite for build tooling
 - Tailwind CSS for styling
-- ShadCN UI components
+- ShadCN UI using RetroUI components registry
 - Bun as package manager
-- Fontsource for fonts
 
 ## 🚀 Getting Started
 
-1. Clone the repository
+1. Clone the repository : `git clone --depth=1 https://github.com/Walidoux/npc-ai.git`
 2. Install dependencies: `bun install`
 3. Start development server: `bun run dev`
 4. Build for production: `bun run build`

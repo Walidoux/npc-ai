@@ -296,7 +296,7 @@ export const useAuth = () => {
 
 export const useBackgroundAudio = (started: boolean) => {
   const bgAudioRef = useRef<HTMLAudioElement>(null)
-  const { backgroundMusicVolume } = useSettings()
+  const { backgroundMusicVolume, selectedMusic } = useSettings()
 
   useEffect(() => {
     const play = async () => {
@@ -311,7 +311,7 @@ export const useBackgroundAudio = (started: boolean) => {
       }
     }
     play()
-  }, [started, backgroundMusicVolume])
+  }, [started, backgroundMusicVolume, selectedMusic])
 
   useEffect(() => {
     if (bgAudioRef.current) {
