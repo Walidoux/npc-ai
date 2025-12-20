@@ -3,7 +3,9 @@ import {
   Trash as ClearIcon,
   Music as MusicIcon,
   Sliders2 as SettingsIcon,
+  Volume2 as VolumeSettings,
 } from '@nsmr/pixelart-react'
+import { cn } from 'tailwind-variants'
 import { useSettings } from '../store/settings'
 import { MusicSelector } from './music-selector'
 import { NpcSelector } from './npc-selector'
@@ -30,6 +32,8 @@ export const SettingsSheet = () => {
     setEnableTypingSound,
     typingSoundVolume,
     setTypingSoundVolume,
+    enableBackgroundMusic,
+    setEnableBackgroundMusic,
     backgroundMusicVolume,
     setBackgroundMusicVolume,
     conversationHistory,
@@ -59,15 +63,30 @@ export const SettingsSheet = () => {
           <NpcSelector onNpcChange={setSelectedNpc} selectedNpc={selectedNpc} />
           <h3 className='mt-6 inline-flex gap-x-2 font-semibold text-lg'>
             <MusicIcon />
-            Select Background Music
+            Background Music
           </h3>
+          <div className='mt-2 flex cursor-pointer items-center justify-between'>
+            <label
+              className='cursor-pointer select-none text-sm'
+              htmlFor='background-music'>
+              Enable Background Music
+            </label>
+            <Switch
+              checked={enableBackgroundMusic}
+              id='background-music'
+              onCheckedChange={setEnableBackgroundMusic}
+            />
+          </div>
           <MusicSelector
             onMusicChange={setSelectedMusic}
             selectedMusic={selectedMusic}
           />
 
           <div className='mt-6'>
-            <h3 className='font-semibold text-lg'>Sound Settings</h3>
+            <h3 className='inline-flex gap-x-2 font-semibold text-lg'>
+              <VolumeSettings />
+              Sound Settings
+            </h3>
             <div className='mt-2 flex cursor-pointer items-center justify-between'>
               <label
                 className='cursor-pointer select-none text-sm'
@@ -100,7 +119,10 @@ export const SettingsSheet = () => {
                 </div>
               </div>
             ) : null}
-            <div className='mt-4'>
+            <div
+              className={cn('mt-4', {
+                'pointer-events-none opacity-20': !enableBackgroundMusic,
+              })}>
               <label className='font-medium text-sm' htmlFor='bg-music-volume'>
                 Background Music Volume
               </label>

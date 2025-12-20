@@ -22,6 +22,8 @@ Instructions:
 
 ## Development Guidelines
 
+At the end of every implementation, if there are any linting problems, execute `bun run format`
+
 - **TypeScript**: Strict mode enabled, no unused locals/parameters
 - **Formatting**: Tabs, double quotes, auto-organized imports
 - **Filenames**: kebab-case for components and files (e.g., dialogue-box.tsx)

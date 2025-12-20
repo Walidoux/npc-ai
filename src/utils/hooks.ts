@@ -296,22 +296,27 @@ export const useAuth = () => {
 
 export const useBackgroundAudio = (started: boolean) => {
   const bgAudioRef = useRef<HTMLAudioElement>(null)
-  const { backgroundMusicVolume, selectedMusic } = useSettings()
+  const { backgroundMusicVolume, selectedMusic, enableBackgroundMusic } =
+    useSettings()
 
   useEffect(() => {
     const play = async () => {
-      if (started && bgAudioRef.current) {
-        bgAudioRef.current.loop = true
-        bgAudioRef.current.volume = backgroundMusicVolume
-        try {
-          await bgAudioRef.current.play()
-        } catch (error) {
-          console.error(error)
+      if (bgAudioRef.current) {
+        if (started && enableBackgroundMusic) {
+          bgAudioRef.current.loop = true
+          bgAudioRef.current.volume = backgroundMusicVolume
+          try {
+            await bgAudioRef.current.play()
+          } catch (error) {
+            console.error(error)
+          }
+        } else {
+          bgAudioRef.current.pause()
         }
       }
     }
     play()
-  }, [started, backgroundMusicVolume, selectedMusic])
+  }, [started, backgroundMusicVolume, selectedMusic, enableBackgroundMusic])
 
   useEffect(() => {
     if (bgAudioRef.current) {

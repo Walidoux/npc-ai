@@ -10,6 +10,8 @@ type SettingsState = {
   setEnableTypingSound: (enabled: boolean) => void
   typingSoundVolume: number
   setTypingSoundVolume: (volume: number) => void
+  enableBackgroundMusic: boolean
+  setEnableBackgroundMusic: (enabled: boolean) => void
   backgroundMusicVolume: number
   setBackgroundMusicVolume: (volume: number) => void
   conversationHistory: Record<string, ChatMessage[]>
@@ -28,6 +30,9 @@ export const useSettings = create<SettingsState>((set) => ({
   setEnableTypingSound: (enabled) => set({ enableTypingSound: enabled }),
   typingSoundVolume: 0.5,
   setTypingSoundVolume: (volume) => set({ typingSoundVolume: volume }),
+  enableBackgroundMusic: true,
+  setEnableBackgroundMusic: (enabled) =>
+    set({ enableBackgroundMusic: enabled }),
   backgroundMusicVolume: 0.5,
   setBackgroundMusicVolume: (volume) => set({ backgroundMusicVolume: volume }),
   conversationHistory: {},
