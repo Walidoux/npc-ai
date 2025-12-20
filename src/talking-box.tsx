@@ -15,7 +15,6 @@ import { useSettings } from './store'
 import {
   useAuth,
   useBackgroundAudio,
-  useCarbonFootprint,
   useKeySound,
   useTyping,
 } from './utils/hooks'
@@ -75,11 +74,6 @@ export const Dialogue = () => {
 
   const { authChecked, isAuthenticating, authStatus, handleStart } = useAuth()
   const bgAudioRef = useBackgroundAudio(started)
-  const carbonMetrics = useCarbonFootprint()
-
-  useEffect(() => {
-    console.log('Carbon Footprint Data:', carbonMetrics)
-  }, [carbonMetrics])
 
   const handleSendMessage = async () => {
     if (userMessage.trim() && !isTypingResponse && authStatus) {

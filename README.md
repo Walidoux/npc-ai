@@ -5,19 +5,19 @@ An interactive AI-powered NPC chat application.
 ## ✨ Features
 
 - Multiple NPC characters with unique personalities/traits
-- Real-time dialogue system
-- Customizable settings and audio controls
-- Retro UI design with customizable themes
+- Real-time dialogue system with capabilities (deep search + weather look up)
+- Customizable settings/audio music controls
 
 ## 🧭 Roadmap
 
+- [ ] Fix : Invalid DOM property `stroke-width` from `@nsmr/pixelart-react` lib icons
+- [ ] Fix : `<Select />` hiding all the UI inside C02 emission view when toggled
+- [ ] Feature : Rank environmental performance based on average carbon footprint data exposed by `@tgwf/co2` SDK
 - [ ] ~~Add more diverse NPC characters with different backgrounds and personalities~~
-- [ ] Enhance AI conversation quality with better context awareness
-- [ ] Add conversation history saving and loading
-- [ ] Introduce branching dialogue trees
-- [ ] Implement multiplayer co-op mode
-- [ ] Support for custom NPC creation by users
-- [ ] Integrate with external AI models for more variety
+- [ ] ~~Enhance AI conversation quality with better context awareness~~
+- [ ] ~~Add conversation history saving and loading~~
+- [ ] ~~Support for custom NPC creation by users~~
+- [ ] ~~Integrate with external AI models for more variety~~
 
 ## 🔧 Tech Stack
 
