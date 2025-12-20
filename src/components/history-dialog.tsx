@@ -1,8 +1,7 @@
 import type { ChatMessage } from '@heyputer/puter.js'
 import { NotesMultiple as HistoryIcon } from '@nsmr/pixelart-react'
 import { npcPersonalities } from '../utils/npcs'
-import { Button } from './ui'
-import { Dialog } from './ui/dialog'
+import { Button, Dialog } from './ui'
 
 type HistoryDialogProps = {
   currentHistory: ChatMessage[]
@@ -15,7 +14,7 @@ export const HistoryDialog = ({
 }: HistoryDialogProps) => (
   <Dialog>
     <Dialog.Trigger asChild className='fixed top-4 left-4'>
-      <Button size='icon' variant='outline'>
+      <Button size='icon'>
         <HistoryIcon />
       </Button>
     </Dialog.Trigger>

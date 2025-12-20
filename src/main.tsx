@@ -2,16 +2,16 @@ import './styles/index.css'
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { SettingsSheet } from './components/settings-sheet.tsx'
-import { ThemeProvider } from './components/theme-provider.tsx'
-import { Toaster } from './components/ui/sonner.tsx'
-import { Dialogue } from './talking-box.tsx'
+import { HeaderPanel } from './components/header-panel'
+import { ThemeProvider } from './components/theme-provider'
+import { Toaster } from './components/ui'
+import { Dialogue } from './talking-box'
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
       <Toaster />
-      <SettingsSheet />
+      <HeaderPanel />
       <Dialogue />
     </ThemeProvider>
   </StrictMode>,

@@ -23,7 +23,7 @@ export const DialogueBox = ({ displayedText }: DialogueBoxProps) => {
       <div
         className='max-h-[calc(200px-32px)] overflow-y-auto px-4 py-3 pr-3'
         ref={scrollRef}>
-        <div className='select-none font-sans text-xl leading-5 tracking-wide'>
+        <div className='font-sans text-xl leading-5 tracking-wide'>
           <ReactMarkdown
             components={{
               a: ({ node, ...props }) => (

@@ -38,8 +38,8 @@ export const SettingsSheet = () => {
 
   return (
     <Sheet>
-      <SheetTrigger asChild className='fixed top-4 right-4'>
-        <Button className='p-2' size='icon' variant='secondary'>
+      <SheetTrigger asChild>
+        <Button className='p-2' size='icon' variant='outline'>
           <SettingsIcon />
         </Button>
       </SheetTrigger>
