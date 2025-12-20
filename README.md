@@ -10,6 +10,8 @@ An interactive AI-powered NPC chat application.
 
 ## 🧭 Roadmap
 
+- [ ] Fix : Uncaught GET request from `https://api.puter.com/whoami`
+- [ ] Fix : Internal React error > Expected static flag was missing from checkAuth (hooks.ts:264) > setIsAuthenticated (settings:55)
 - [ ] Fix : Invalid DOM property `stroke-width` from `@nsmr/pixelart-react` lib icons
 - [ ] Fix : `<Select />` hiding all the UI inside C02 emission view when toggled
 - [ ] Feature : Rank environmental performance based on average carbon footprint data exposed by `@tgwf/co2` SDK
