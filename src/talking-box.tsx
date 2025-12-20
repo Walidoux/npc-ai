@@ -1,14 +1,15 @@
 import type { ChatMessage } from '@heyputer/puter.js'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
   CharacterPortrait,
   DialogueBox,
   HistoryDialog,
   StartScreen,
   TypingAudio,
-} from './components'
+} from './components/layout'
 import { Button, Input } from './components/ui'
 import { sendChatMessage } from './services/ai'
-import { useSettings } from './store/settings'
+import { useSettings } from './store'
 import {
   useAuth,
   useBackgroundAudio,
@@ -138,63 +139,79 @@ export const Dialogue = () => {
     }
   }
 
-  if (!started) {
-    return (
-      <StartScreen
-        authChecked={authChecked}
-        authStatus={authStatus}
-        isAuthenticating={isAuthenticating}
-        onStart={() => handleStart(setStarted)}
-      />
-    )
-  }
-
   return (
-    <main className='flex min-h-screen flex-col items-center justify-center p-8'>
-      <section
-        aria-label='character-dialogue'
-        className='relative mb-4 flex items-end gap-4'>
-        <CharacterPortrait />
-        {isTypingResponse ||
-          (currentResponse && (
-            <TalkingBox
-              enabled={enableTypingSound}
-              isStreamComplete={!isTypingResponse}
-              text={currentResponse}
-              typingSoundVolume={typingSoundVolume}
-            />
-          ))}
-      </section>
-
-      <div className='flex gap-2'>
-        <Input
-          autoFocus
-          disabled={isTypingResponse}
-          onChange={(e) => setUserMessage(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder='Type your message...'
-          ref={inputRef}
-          type='text'
-          value={userMessage}
+    <AnimatePresence mode='wait'>
+      {started && (conversationHistory[selectedNpc] || []).length > 0 && (
+        <HistoryDialog
+          currentHistory={conversationHistory[selectedNpc] || []}
+          selectedNpc={selectedNpc}
         />
-        <Button
-          className='uppercase'
-          disabled={!userMessage.trim() || isTypingResponse}
-          onClick={handleSendMessage}>
-          {isTypingResponse ? '...' : 'send'}
-        </Button>
-      </div>
+      )}
 
-      <HistoryDialog
-        currentHistory={conversationHistory[selectedNpc] || []}
-        selectedNpc={selectedNpc}
-      />
-      <audio
-        preload='auto'
-        ref={bgAudioRef}
-        src={musicOptions[selectedMusic]?.url}>
-        <track kind='captions' />
-      </audio>
-    </main>
+      {started ? (
+        <motion.main
+          animate={{ opacity: 1, y: 0 }}
+          className='flex min-h-screen flex-col items-center justify-center p-8'
+          exit={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
+          key='dialogue-screen'
+          transition={{ duration: 0.5, ease: 'easeInOut' }}>
+          <section
+            aria-label='character-dialogue'
+            className='relative mb-4 flex items-end gap-4'>
+            <CharacterPortrait />
+            {isTypingResponse ||
+              (currentResponse && (
+                <TalkingBox
+                  enabled={enableTypingSound}
+                  isStreamComplete={!isTypingResponse}
+                  text={currentResponse}
+                  typingSoundVolume={typingSoundVolume}
+                />
+              ))}
+          </section>
+
+          <div className='flex gap-2'>
+            <Input
+              autoFocus
+              disabled={isTypingResponse}
+              onChange={(e) => setUserMessage(e.target.value)}
+              onKeyDown={handleKeyPress}
+              placeholder='Type your message...'
+              ref={inputRef}
+              type='text'
+              value={userMessage}
+            />
+            <Button
+              className='uppercase'
+              disabled={!userMessage.trim() || isTypingResponse}
+              onClick={handleSendMessage}>
+              {isTypingResponse ? '...' : 'send'}
+            </Button>
+          </div>
+          <audio
+            preload='auto'
+            ref={bgAudioRef}
+            src={musicOptions[selectedMusic]?.url}>
+            <track kind='captions' />
+          </audio>
+        </motion.main>
+      ) : (
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className='absolute inset-0'
+          exit={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
+          key='start-screen'
+          transition={{ duration: 0.5, ease: 'easeInOut' }}>
+          <StartScreen
+            authChecked={authChecked}
+            authStatus={authStatus}
+            isAuthenticating={isAuthenticating}
+            onStart={() => handleStart(setStarted)}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

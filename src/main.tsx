@@ -2,8 +2,7 @@ import './styles/index.css'
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { HeaderPanel } from './components/header-panel'
-import { ThemeProvider } from './components/theme-provider'
+import { HeaderPanel, ThemeProvider } from './components/layout'
 import { Toaster } from './components/ui'
 import { Dialogue } from './talking-box'
 

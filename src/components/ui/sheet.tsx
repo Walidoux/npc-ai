@@ -9,7 +9,7 @@ import {
   Title,
   Trigger,
 } from '@radix-ui/react-dialog'
-import { cn } from '@/utils'
+import { cn } from 'tailwind-variants'
 
 function Sheet({ onOpenChange, ...props }: React.ComponentProps<typeof Root>) {
   return <Root data-slot='sheet' onOpenChange={onOpenChange} {...props} />

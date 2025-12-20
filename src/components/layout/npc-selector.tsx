@@ -1,4 +1,4 @@
-import { npcPersonalities, npcs } from '../utils/npcs'
+import { npcPersonalities, npcs } from '@/utils/npcs'
 
 type NpcSelectorProps = {
   selectedNpc: string

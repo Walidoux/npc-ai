@@ -6,9 +6,6 @@ import {
   Volume2 as VolumeSettings,
 } from '@nsmr/pixelart-react'
 import { cn } from 'tailwind-variants'
-import { useSettings } from '../store/settings'
-import { MusicSelector } from './music-selector'
-import { NpcSelector } from './npc-selector'
 import {
   Button,
   Sheet,
@@ -20,7 +17,10 @@ import {
   SheetTrigger,
   Slider,
   Switch,
-} from './ui'
+} from '@/components/ui'
+import { useSettings } from '@/store/settings'
+import { MusicSelector } from './music-selector'
+import { NpcSelector } from './npc-selector'
 
 export const SettingsSheet = () => {
   const {

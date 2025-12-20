@@ -1,5 +1,5 @@
-import { useSettings } from '../store/settings'
-import { npcs } from '../utils/npcs'
+import { useSettings } from '@/store'
+import { npcs } from '@/utils/npcs'
 
 export const CharacterPortrait = () => {
   const { selectedNpc } = useSettings()

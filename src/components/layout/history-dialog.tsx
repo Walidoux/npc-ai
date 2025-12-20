@@ -1,7 +1,7 @@
 import type { ChatMessage } from '@heyputer/puter.js'
 import { NotesMultiple as HistoryIcon } from '@nsmr/pixelart-react'
-import { npcPersonalities } from '../utils/npcs'
-import { Button, Dialog } from './ui'
+import { Button, Dialog } from '@/components/ui'
+import { npcPersonalities } from '@/utils/npcs'
 
 type HistoryDialogProps = {
   currentHistory: ChatMessage[]

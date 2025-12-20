@@ -1,7 +1,7 @@
 'use client'
 
 import { Range, Root, Thumb, Track } from '@radix-ui/react-slider'
-import { cn } from '@/utils/index'
+import { cn } from 'tailwind-variants'
 
 const Slider = forwardRef<
   React.ComponentRef<typeof Root>,

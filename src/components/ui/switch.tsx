@@ -1,8 +1,9 @@
 'use client'
 
 import { Root, type SwitchProps, Thumb } from '@radix-ui/react-switch'
+import { cn } from 'tailwind-variants'
 import { useSFX } from '@/utils/hooks'
-import { cn, getSample } from '@/utils/index'
+import { getSample } from '@/utils/index'
 
 const Switch = ({ className, onCheckedChange, ...props }: SwitchProps) => {
   const { audioRef, play } = useSFX()

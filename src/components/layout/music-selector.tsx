@@ -1,7 +1,7 @@
 import { cn } from 'tailwind-variants'
+import { Button } from '@/components/ui'
 import { useSettings } from '@/store/settings'
-import { musicOptions } from '../utils/music'
-import { Button } from './ui'
+import { musicOptions } from '@/utils/music'
 
 type MusicSelectorProps = {
   selectedMusic: string

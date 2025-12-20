@@ -12,8 +12,7 @@ import {
   Trigger,
 } from '@radix-ui/react-dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { tv, type VariantProps } from 'tailwind-variants'
-import { cn } from '@/utils'
+import { cn, tv, type VariantProps } from 'tailwind-variants'
 
 const Dialog = Root
 const DialogTrigger = Trigger

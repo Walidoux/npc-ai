@@ -1,4 +1,4 @@
-import { useAudioSamples } from '../utils/hooks'
+import { useAudioSamples } from '../../utils/hooks'
 
 type AudioControlsProps = {
   stopTyping: () => void

@@ -1,5 +1,6 @@
+import { ArrowBarDown as AuthIcon, Chat } from '@nsmr/pixelart-react'
 import { toast } from 'sonner'
-import { Button, Spinner } from './ui'
+import { Button, Spinner } from '@/components/ui'
 
 type StartScreenProps = {
   authChecked: boolean
@@ -32,9 +33,19 @@ export const StartScreen = ({
       </>
     )
   } else if (authStatus) {
-    buttonContent = 'Start Chatting'
+    buttonContent = (
+      <>
+        <Chat className='mr-2' size={18} />
+        Start Chatting
+      </>
+    )
   } else {
-    buttonContent = 'Sign In & Start'
+    buttonContent = (
+      <>
+        <AuthIcon />
+        Sign In & Chat
+      </>
+    )
   }
 
   // biome-ignore lint/correctness/useHookAtTopLevel: attended
