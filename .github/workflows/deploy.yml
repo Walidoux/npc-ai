@@ -44,6 +44,10 @@ jobs:
             - name: Run linting
               run: bun run lint
 
+            # Install ffmpeg
+            - name: Install ffmpeg
+              run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
             # Build the project
             - name: Build project
               run: bun run build
