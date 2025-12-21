@@ -13,6 +13,7 @@
     "cssVariables": true
   },
   "aliases": {
+    "ui": "@/components/ui",
     "components": "@/components",
     "utils": "@/utils"
   }

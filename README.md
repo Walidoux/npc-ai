@@ -10,6 +10,8 @@ An interactive AI-powered NPC chat application.
 
 ## 🧭 Roadmap
 
+- [ ] Fix : Background music no longer starts after navigating and landing in talking box view, and music gets interrupted when navigating between screen views
+- [ ] Fix : Music stops when navigating between page views
 - [ ] Fix : Uncaught GET request from `https://api.puter.com/whoami`
 - [ ] Fix : Internal React error > Expected static flag was missing from checkAuth (hooks.ts:264) > setIsAuthenticated (settings:55)
 - [ ] Fix : Invalid DOM property `stroke-width` from `@nsmr/pixelart-react` lib icons

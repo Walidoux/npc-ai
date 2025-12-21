@@ -1,6 +1,6 @@
 import { ArrowBarDown as AuthIcon, Chat } from '@nsmr/pixelart-react'
 import { toast } from 'sonner'
-import { Button, Spinner } from '@/components/ui'
+import { Button, Spinner, Text } from '@/components/ui'
 
 type StartScreenProps = {
   authChecked: boolean
@@ -69,9 +69,9 @@ export const StartScreen = ({
     <div className='flex min-h-screen items-center justify-center p-8'>
       <div className='text-center'>
         {!authStatus && (
-          <p className='mb-4'>
+          <Text className='mb-4'>
             You'll need to sign in with Puter to use AI features
-          </p>
+          </Text>
         )}
         <Button disabled={isAuthenticating} onClick={onStart}>
           {buttonContent}

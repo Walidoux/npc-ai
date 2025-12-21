@@ -1,5 +1,6 @@
 'use client'
 
+import { Check, ChevronDown, ChevronUp } from '@nsmr/pixelart-react'
 import {
   Content,
   Icon,
@@ -20,7 +21,6 @@ import {
   Value,
   Viewport,
 } from '@radix-ui/react-select'
-import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from 'tailwind-variants'
 
 const SelectTrigger = ({

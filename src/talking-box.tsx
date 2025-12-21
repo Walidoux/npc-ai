@@ -63,6 +63,7 @@ export const Dialogue = () => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useKeySound()
+
   const {
     selectedNpc,
     selectedMusic,
@@ -140,12 +141,14 @@ export const Dialogue = () => {
     <>
       <HeaderPanel onCO2Click={() => setShowCO2Page(true)} />
       <AnimatePresence mode='wait'>
-        {started && (conversationHistory[selectedNpc] || []).length > 0 && (
-          <HistoryDialog
-            currentHistory={conversationHistory[selectedNpc] || []}
-            selectedNpc={selectedNpc}
-          />
-        )}
+        {started &&
+          !showCO2Page &&
+          (conversationHistory[selectedNpc] || []).length > 0 && (
+            <HistoryDialog
+              currentHistory={conversationHistory[selectedNpc] || []}
+              selectedNpc={selectedNpc}
+            />
+          )}
 
         {showCO2Page && (
           <motion.div

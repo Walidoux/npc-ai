@@ -1,13 +1,18 @@
-export const musicFiles = import.meta.glob('/public/music/background_*.mp3', {
-  query: '?url',
-  eager: true,
-  import: 'default',
-}) as Record<string, string>
+export const musicFiles = import.meta.glob(
+  './../assets/audio/background_*.mp3',
+  {
+    eager: true,
+    import: 'default',
+  },
+) as Record<string, string>
 
-export const musicMetadata = import.meta.glob('/public/music/metadata_*.json', {
-  eager: true,
-  import: 'default',
-}) as Record<string, { title: string; author: string }>
+export const musicMetadata = import.meta.glob(
+  './../assets/audio/metadata_*.json',
+  {
+    eager: true,
+    import: 'default',
+  },
+) as Record<string, { title: string; author: string }>
 
 export type MusicInfo = {
   id: string

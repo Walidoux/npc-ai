@@ -1,5 +1,5 @@
+import { cn } from 'tailwind-variants'
 import { Text } from '@/components/ui/text'
-import { cn } from '@/utils/index'
 
 interface ICardProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string
@@ -27,7 +27,7 @@ const CardTitle = ({ className, ...props }: ICardProps) => (
 )
 
 const CardDescription = ({ className, ...props }: ICardProps) => (
-  <p className={cn('text-muted-foreground', className)} {...props} />
+  <Text className={cn('text-muted-foreground', className)} {...props} />
 )
 
 const CardContent = ({ className, ...props }: ICardProps) => (

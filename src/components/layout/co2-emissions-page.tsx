@@ -26,14 +26,14 @@ export const CO2EmissionsPage = ({ onBack }: CO2EmissionsPageProps) => {
       </Button>
 
       <div className='mb-8 text-center'>
-        <h1 className='mx-auto mb-4 max-w-[500px] font-bold text-3xl'>
+        <Text as='h1' className='mx-auto mb-4 max-w-[750px] px-6'>
           Real-time Environmental Footprint Tracker : CO2 + Blue Water
           Consumption
-        </h1>
-        <p className='text-lg text-muted-foreground'>
+        </Text>
+        <Text className='text-lg text-muted-foreground'>
           Monitor your environmental impact from AI conversations
-        </p>
-        <p className='mt-4 text-sm'>
+        </Text>
+        <Text className='mt-4 text-sm'>
           For
           <Select onValueChange={setSelectedView} value={selectedView}>
             <Select.Trigger className='mx-3 inline-flex min-w-20!'>
@@ -52,11 +52,13 @@ export const CO2EmissionsPage = ({ onBack }: CO2EmissionsPageProps) => {
             </Select.Content>
           </Select>
           monthly page views, this web page's foot-print is:
-        </p>
+        </Text>
       </div>
 
       <div className='mb-8 max-w-2xl rounded-lg border bg-card p-6 shadow-sm'>
-        <h2 className='mb-4 font-semibold text-xl'>Current Session</h2>
+        <Text as='h2' className='mb-4'>
+          Current Session
+        </Text>
         <div className='grid grid-cols-2 gap-4'>
           <div className='rounded border p-4'>
             <div className='font-bold text-2xl'>{nodeCount}</div>

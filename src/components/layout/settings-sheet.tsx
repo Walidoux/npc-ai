@@ -17,6 +17,7 @@ import {
   SheetTrigger,
   Slider,
   Switch,
+  Text,
 } from '@/components/ui'
 import { useSettings } from '@/store/settings'
 import { MusicSelector } from './music-selector'
@@ -49,22 +50,26 @@ export const SettingsSheet = () => {
       </SheetTrigger>
       <SheetContent className='font-head'>
         <SheetHeader>
-          <SheetTitle className='inline-flex gap-x-2'>
-            <SettingsIcon />
-            Settings
+          <SheetTitle className='flex items-center gap-x-2'>
+            <SettingsIcon size={28} />
+            <Text as='h3' className='font-semibold'>
+              Settings
+            </Text>
           </SheetTitle>
           <SheetDescription>Adjust your preferences here.</SheetDescription>
         </SheetHeader>
         <div className='mt-4 overflow-y-auto px-4 pb-6'>
-          <h3 className='inline-flex gap-x-2 font-semibold text-lg'>
-            <CharacterIcon />
+          <Text as='h4' className='flex items-center gap-x-2 font-semibold'>
+            <CharacterIcon size={20} />
             Select Character
-          </h3>
+          </Text>
           <NpcSelector onNpcChange={setSelectedNpc} selectedNpc={selectedNpc} />
-          <h3 className='mt-6 inline-flex gap-x-2 font-semibold text-lg'>
+          <Text
+            as='h4'
+            className='mt-6 flex items-center gap-x-2 font-semibold'>
             <MusicIcon />
             Background Music
-          </h3>
+          </Text>
           <div className='mt-2 flex cursor-pointer items-center justify-between'>
             <label
               className='cursor-pointer select-none text-sm'
@@ -83,10 +88,10 @@ export const SettingsSheet = () => {
           />
 
           <div className='mt-6'>
-            <h3 className='inline-flex gap-x-2 font-semibold text-lg'>
+            <Text as='h4' className='flex items-center gap-x-2 font-semibold'>
               <VolumeSettings />
               Sound Settings
-            </h3>
+            </Text>
             <div className='mt-2 flex cursor-pointer items-center justify-between'>
               <label
                 className='cursor-pointer select-none text-sm'
@@ -99,7 +104,7 @@ export const SettingsSheet = () => {
                 onCheckedChange={setEnableTypingSound}
               />
             </div>
-            {enableTypingSound ? (
+            {enableTypingSound && (
               <div className='mt-4'>
                 <label
                   className='font-medium text-sm'
@@ -118,7 +123,7 @@ export const SettingsSheet = () => {
                   />
                 </div>
               </div>
-            ) : null}
+            )}
             <div
               className={cn('mt-4', {
                 'pointer-events-none opacity-20': !enableBackgroundMusic,

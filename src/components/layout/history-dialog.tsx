@@ -1,6 +1,6 @@
 import type { ChatMessage } from '@heyputer/puter.js'
 import { NotesMultiple as HistoryIcon } from '@nsmr/pixelart-react'
-import { Button, Dialog } from '@/components/ui'
+import { Button, Dialog, Text } from '@/components/ui'
 import { npcPersonalities } from '@/utils/npcs'
 
 type HistoryDialogProps = {
@@ -29,9 +29,9 @@ export const HistoryDialog = ({
       <div className='max-h-[60vh] overflow-y-auto'>
         <div className='space-y-4'>
           {currentHistory.length === 0 ? (
-            <p className='p-6 text-center text-gray-500'>
+            <Text className='p-6 text-center text-gray-500'>
               No messages yet. Start a conversation!
-            </p>
+            </Text>
           ) : (
             currentHistory.map((msg, index) => (
               <div
