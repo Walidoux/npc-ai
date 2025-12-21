@@ -5,33 +5,53 @@ on:
     push:
         branches:
             - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
     build-deploy:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pages: write
 
         steps:
             # Checkout the repository
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            # Setup Nodejs
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
+            # Setup Bun
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v1
               with:
-                  node-version: 18
+                  bun-version: latest
+
+            # Cache dependencies
+            - name: Cache Bun dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ~/.bun/install/cache
+                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/bun.lockb') }}
+                  restore-keys: |
+                      ${{ runner.os }}-bun-
 
             # Install Dependencies
             - name: Install Dependencies
-              run: npm install
+              run: bun install --frozen-lockfile
+
+            # Run linting and type checking
+            - name: Run linting
+              run: bun run lint
 
             # Build the project
             - name: Build project
-              run: npm run build
+              run: bun run build
 
             # Deploy to github pages
             - name: Deploy to github pages
-              uses: peaceiris/actions-gh-pages@v3
+              if: github.ref == 'refs/heads/main'
+              uses: peaceiris/actions-gh-pages@v4
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: dist
