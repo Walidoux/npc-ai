@@ -1,4 +1,5 @@
 import { resolve } from 'node:path'
+import { constants } from 'node:zlib'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -6,7 +7,6 @@ import { defineConfig } from 'vite'
 import viteAudioTransform from 'vite-audio-transform'
 import { compression, defineAlgorithm } from 'vite-plugin-compression2'
 import htmlMinifier from 'vite-plugin-html-minifier'
-import { constants } from 'zlib'
 
 export default defineConfig({
   plugins: [

@@ -70,6 +70,7 @@
     "vite-audio-transform": "^1.0.1",
     "vite-plugin-compression2": "^2.4.0",
     "vite-plugin-html-minifier": "^1.0.5",
-    "vite-plugin-markdown": "^2.2.0"
+    "vite-plugin-markdown": "^2.2.0",
+    "zlib": "^1.0.5"
   }
 }
